@@ -1,0 +1,1 @@
+const form=document.querySelector("#power");const total=document.querySelector("#total");function calculate(){if(!form.checkValidity())return;total.textContent=Array.from(form.querySelectorAll("input")).reduce((sum,input)=>sum+Number(input.value),0)+" W"}form.addEventListener("submit",e=>{e.preventDefault();calculate()});form.addEventListener("input",calculate);calculate();
