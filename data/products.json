@@ -1,1 +1,17 @@
-[]
+[
+  {
+    "id": "ugreen-65w-travel-2c1a",
+    "guideSlug": "travel-multiport-charger",
+    "name": "UGREEN 綠聯 65W GaN 多國充電器",
+    "description": "三孔 2C1A 配置，支援 PD 快充；適合需要同時為多台相容裝置充電、並考慮不同插頭形式的旅客。",
+    "specs": [
+      "65W 上限",
+      "2 USB-C + 1 USB-A",
+      "多國插頭"
+    ],
+    "productUrl": "https://shopee.tw/product/8291388/40525641162",
+    "verifiedOn": "2026-11-26",
+    "approved": false,
+    "preview": true
+  }
+]
