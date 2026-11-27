@@ -42,8 +42,35 @@ const search=await catalogPage(new Request('https://hicrewapps.com/search/?q=USB
 assert.equal(search.status,200);assert((await search.text()).includes('找到 <strong>1</strong> 筆商品'));
 const emptySearch=await catalogPage(new Request('https://hicrewapps.com/search/index.html?max=10'),env,next,guides,products);
 assert((await emptySearch.text()).includes('沒有符合條件的商品'));
+const saved=data.get(KEY);
 data.clear();
 const unavailable=await catalogPage(new Request('https://hicrewapps.com/search/'),env,next,guides,products);
 assert((await unavailable.text()).includes('商品資料暫未同步'));
 assert.equal((await catalogPage(new Request('https://hicrewapps.com/'),env,next,guides,products)).status,404);
+data.set(KEY,saved);
 console.log('Live catalog auth, storage and HTML route checks passed');
+
+const seo={...env,SEO_INDEX_ENABLED:'1'};
+const urls=['/','/tools/','/about/',...guides.map(g=>'/guides/'+g.slug+'/')];
+for(const path of urls){
+ const res=await catalogPage(new Request('https://hicrewapps.com'+path),seo,next,guides,products);
+ assert.equal(res.status,200);assert.equal(res.headers.get('X-Robots-Tag'),'index, follow');
+ const html=await res.text();assert(html.includes('content="index,follow"'));assert(html.includes('rel="canonical" href="https://hicrewapps.com'+path+'"'));
+}
+for(const path of ['/search/?q=USB-C','/deals/','/categories/1/']){
+ const res=await catalogPage(new Request('https://hicrewapps.com'+path),seo,next,guides,products);
+ assert.equal(res.status,200);assert.equal(res.headers.get('X-Robots-Tag'),'noindex, follow');assert((await res.text()).includes('content="noindex,follow"'));
+}
+const alias=await catalogPage(new Request('https://hicrewapps.com/guides/usb-c-phone-charger/index.html?utm_source=test'),seo,next,guides,products);
+assert.equal(alias.status,301);assert.equal(alias.headers.get('Location'),'https://hicrewapps.com/guides/usb-c-phone-charger/?utm_source=test');
+const map=await catalogPage(new Request('https://hicrewapps.com/sitemap.xml'),seo,next,guides,products);
+assert.equal(map.status,200);const xml=await map.text();assert.equal((xml.match(/<loc>/g)||[]).length,6);for(const path of urls)assert(xml.includes('<loc>https://hicrewapps.com'+path+'</loc>'));
+assert(!xml.includes('/search/'));assert(!xml.includes('/deals/'));assert(!xml.includes('/categories/'));
+const robots=await catalogPage(new Request('https://hicrewapps.com/robots.txt'),seo,next,guides,products);assert((await robots.text()).includes('Sitemap: https://hicrewapps.com/sitemap.xml'));
+assert.equal((await catalogPage(new Request('https://hicrewapps.com/sitemap.xml'),env,next,guides,products)).status,404);
+assert.equal((await catalogPage(new Request('https://preview.pages.dev/'),seo,next,guides,products)).status,404);
+data.clear();
+const fallback=await catalogPage(new Request('https://hicrewapps.com/'),seo,next,guides,products);
+assert.equal(fallback.status,200);assert.equal(fallback.headers.get('X-Robots-Tag'),'index, follow');assert((await fallback.text()).includes('content="index,follow"'));
+console.log('SEO allowlist, canonical, sitemap and fallback checks passed');
+
