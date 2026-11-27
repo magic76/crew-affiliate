@@ -3,3 +3,5 @@ const guides=JSON.parse(await readFile('data/guides.json','utf8'));const product
 
 for(const g of guides){const h=render(guides,products)['guides/'+g.slug+'/index.html'];assert(h.includes('快速選購結論'));assert(h.includes('使用情境比較'));assert(h.includes('常見問題'));assert(g.quick.length>=2&&g.comparison.length>=2&&g.faq.length>=2);}
 console.log('Guide conversion checks passed');
+
+const seoPages=render(guides,products,'https://hicrewapps.com');for(const g of guides){const html=seoPages['guides/'+g.slug+'/index.html'];assert(html.includes('參考資料與編輯說明'));const json=JSON.parse(html.match(/<script type="application\/ld\+json">([^<]+)<\/script>/)[1]);assert.equal(json['@graph'][0]['@type'],'Article');assert.equal(json['@graph'][0].headline,g.title);assert.equal(json['@graph'][0].dateModified,g.reviewedOn);assert.equal(json['@graph'][1]['@type'],'BreadcrumbList');}assert(!seoPages['search/index.html'].includes('application/ld+json'));assert(!render(guides,products)['index.html'].includes('application/ld+json'));console.log('Editorial structured data checks passed');
