@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {parseFilters,searchCatalog,catalogCounts} from '../src/catalog-search.mjs';
-import {validateCatalog} from '../src/catalog-model.mjs';
+import {validateCatalog,guideOffers,GUIDE_QUERIES} from '../src/catalog-model.mjs';
 import {render} from '../src/render.mjs';
 const product=(id,name,price,rocket=false)=>({productId:id,productName:name,productPrice:price,isRocket:rocket,productImage:'https://t2c.coupangcdn.com/test.png',productUrl:'https://coupa.ng/test',categoryName:'電子配件'});
 const one=product(1,'USB-C 充電器',499,true),two=product(2,'USB-C 充電線',199),three=product(3,'洗衣精',99,true);
@@ -31,3 +31,16 @@ console.log('Shopping discovery tests passed');
 assert.deepEqual(catalogCounts(catalog),{deals:2,categoryProducts:2,guideProducts:1,keywordProducts:0,sourceRows:5,uniqueProducts:3,duplicateRows:2});assert(pages['search/index.html'].includes('全站 3 件不重複商品'));assert(pages['search/index.html'].includes('data-product-image'));assert(pages['search/index.html'].includes('assets/product-image.js'));console.log('Catalog count checks passed');
 
 const expanded=validateCatalog({...snapshot,expanded:[product(4,'無線滑鼠',299),one]});assert.equal(catalogCounts(expanded).uniqueProducts,4);assert.equal(searchCatalog(expanded,parseFilters(new URLSearchParams('q=無線滑鼠'))).length,1);
+
+assert.deepEqual(Object.keys(GUIDE_QUERIES).sort(),guides.map(g=>g.slug).sort());
+const coverageSnapshot={...snapshot,expanded:[product(4,'無線滑鼠',299),product(5,'成人尿布',399),product(6,'嬰兒尿布',0),{...product(7,'嬰兒尿布',399),productUrl:'https://evil.example/product'}]};
+const coverage=validateCatalog(coverageSnapshot);
+assert.deepEqual(guideOffers(coverage,'usb-c-cable-60w-100w').map(p=>p.productId),['2']);
+assert.deepEqual(guideOffers(coverage,'detergent-unit-price').map(p=>p.productId),['3']);
+assert.deepEqual(guideOffers(coverage,'wireless-mouse').map(p=>p.productId),['4']);
+assert.deepEqual(guideOffers(coverage,'diaper-unit-price'),[]);
+assert.deepEqual(guideOffers(null,'wireless-mouse'),[]);
+const coveragePages=render(guides,[],'',coverageSnapshot);
+for(const slug of ['usb-c-cable-60w-100w','detergent-unit-price','wireless-mouse']){const html=coveragePages['guides/'+slug+'/index.html'];assert(html.includes('id="guide-products"'));assert(html.includes('rel="sponsored nofollow noopener noreferrer"'));}
+assert(!coveragePages['guides/diaper-unit-price/index.html'].includes('id="guide-products"'));
+assert.throws(()=>validateCatalog({...coverageSnapshot,fetchedAt:new Date(Date.now()-3600001).toISOString()}));
