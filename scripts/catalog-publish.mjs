@@ -11,7 +11,7 @@ async function waitForEndpoint(){
       const res=await fetch(endpoint,{redirect:'error',signal:AbortSignal.timeout(10000),headers:{'Cache-Control':'no-cache'}});
       if(res.ok&&res.headers.get('Content-Type')?.includes('application/json')){
         const status=await res.json();
-        if(status.enabled===true&&status.protocol===3)return true;
+        if(status.enabled===true&&status.protocol===4)return true;
         if(status.enabled===false){disabled=true;if(process.env.GITHUB_EVENT_NAME!=='push')return false;}
       }
     }catch{}

@@ -31,8 +31,9 @@ export async function checkIdentity(token,{fetchImpl=fetch,now=Date.now()}={}){
     // Reject expired, future and old tokens even if GitHub issues a longer-lived credential.
     if(exp===null||iat===null||nbf===null||exp<=seconds||exp<=iat||nbf>seconds+30||iat>seconds+30||seconds-iat>600)return stage;
     stage='jwks';
-    const res=await fetchImpl(ISSUER+'/.well-known/jwks',{redirect:'error',signal:AbortSignal.timeout(10000)});
-    if(!res.ok)return stage;
+    // Workers does not implement redirect:'error'; manual + exact HTTP 200 rejects redirects safely.
+    const res=await fetchImpl(ISSUER+'/.well-known/jwks',{redirect:'manual',signal:AbortSignal.timeout(10000)});
+    if(res.status!==200)return stage;
     const jwks=await res.json();
     stage='key';
     const key=jwks.keys?.find(k=>k.kid===header.kid&&k.kty==='RSA'&&(!k.alg||k.alg==='RS256'));
@@ -68,7 +69,7 @@ export async function catalogApi(request,env,{verify=checkIdentity}={}){
   if(new URL(request.url).hostname!==HOST)return json({enabled:false},404);
   if(request.method==='GET'){
     const current=await readCatalog(env);
-    return json({protocol:3,enabled:enabled(env),ready:!!current,...(current?{fetchedAt:current.fetchedAt,deals:current.deals.length,categories:current.categories.length,guideMatches:Object.fromEntries(Object.entries(current.guides).map(([k,v])=>[k,v.length]))}:{})});
+    return json({protocol:4,enabled:enabled(env),ready:!!current,...(current?{fetchedAt:current.fetchedAt,deals:current.deals.length,categories:current.categories.length,guideMatches:Object.fromEntries(Object.entries(current.guides).map(([k,v])=>[k,v.length]))}:{})});
   }
   if(request.method!=='POST')return json({error:'method'},405);
   if(!enabled(env))return json({error:'disabled'},503);

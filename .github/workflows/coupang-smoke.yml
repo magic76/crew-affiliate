@@ -1,7 +1,7 @@
 name: Coupang Partners API smoke
 on:
   push:
-    branches: [chatgpt/catalog-oidc-verification]
+    branches: [chatgpt/catalog-workers-fetch]
     paths: ['.github/workflows/coupang-smoke.yml']
   workflow_dispatch:
 permissions:
