@@ -23,4 +23,7 @@ data/guides.json 是指南來源；data/products.json 包含一筆一般商品�
 4. 執行 node scripts/coupang-smoke.mjs --self-test（不連網）；設定金鑰後執行 node scripts/coupang-smoke.mjs，單次 POST 產生測試分潤連結，只輸出狀態，不輸出原始回應或連結。雲端若被拒絕，遵守平台限制，不繞過。
 5. 經人工核對的真實分潤商品可加入 data/products.json：provider: coupang、id、guideSlug、name、description（選填）、affiliateUrl（支援官方 https://coupa.ng/… 及 https://link.tw.coupang.com/a/…）、verifiedOn、approved: true。正式商品含分潤揭露。搜尋結果連結不得冒充特定商品。
 6. Reco API 已確認：POST /v2/providers/affiliate_open_api/apis/openapi/v2/products/reco。執行 node scripts/coupang-reco.mjs --self-test 或設定金鑰後執行 node scripts/coupang-reco.mjs。單次診斷只傳實際網站 domain/page 與 imp 的原生廣告、圖片尺寸及暫定 placementId；不傳 device/user、不呼叫 impressionUrl 或商品連結、不記錄原始資料。回傳商品數量及必要欄位完整數；空結果不等於認證失敗。
-7. Reco 是廣告推薦，未記載 keyword 查詢；正式展示須在真實曝光時依文件呼叫 impressionUrl，並先核對隱私、平台規則、媒體核准、快取期限及 placement/subId 設定。商品搜尋與報表仍待 Document。尚未排程、發布真實商品或驗證成交佣金。
+7. Reco 是廣告推薦，未記載 keyword 查詢；正式展示須在真實曝光時依文件呼叫 impressionUrl，並先核對隱私、平台規則、媒體核准、快取期限及 placement/subId 設定。Document 已確認商品搜尋、分類、特價、活動及報表端點；詳細參數及回應 schema 仍需核對。尚未排程、發布真實商品或驗證成交佣金。
+
+8. 商品診斷：node scripts/coupang-products.mjs --self-test；設定金鑰後執行 node scripts/coupang-products.mjs，單次並行查詢 search、hotcategories、goldbox。搜尋暫用 keyword=USB-C&limit=5；參數及回傳欄位以實測和展開的官方 Document 確認。僅輸出狀態、結構與筆數，不保存原始商品資料或開啟追蹤網址。
+9. 官方速率限制：search 50 次/分鐘、reports 500 次/小時、Reco 1000 次/分鐘；goldbox 每日 07:30 更新，報表每日 12:00 更新（時區待確認）。reports/clicks、orders、cancels、commission 及 ads 報表已列於官方文件，日期參數、資料格式、歸因維度尚未提供，暫不呼叫或發布收益。
