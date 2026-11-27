@@ -1,0 +1,17 @@
+name: Guide regression checks
+on:
+  push:
+    branches: [chatgpt/30-buying-guides]
+  pull_request:
+    paths: ['data/guides.json','data/topic-queue.json','src/seo.mjs','src/catalog*.mjs','src/render.mjs','scripts/**','.github/workflows/guide-ci.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - run: npm run build && npm test

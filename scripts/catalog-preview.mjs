@@ -1,7 +1,7 @@
 import {catalogCounts} from '../src/catalog-search.mjs';
 import {writeFile,readFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
-import {syncCatalog,validateCatalog,normalizeProduct} from '../src/catalog.mjs';
+import {syncCatalog,validateCatalog,normalizeProduct,GUIDE_QUERIES} from '../src/catalog.mjs';
 import {render} from '../src/render.mjs';
 
 const fixture={productId:123,productName:'USB-C 充電器 cable',productImage:'https://t2c.coupangcdn.com/image/test.png',productUrl:'https://link.tw.coupang.com/re/test',productPrice:199,categoryName:'充電配件',isRocket:true};
@@ -34,7 +34,7 @@ if(process.argv.includes('--self-test')){
     const rows=u.pathname.endsWith('/hotcategories')?[{categoryId:1,categoryName:'充電配件'}]:[fixture,fixture];
     return {ok:true,status:200,json:async()=>({rCode:'0',data:u.pathname.endsWith('/search')?{productData:rows}:rows})};
   }});
-  assert.equal(calls.length,14);
+  assert.equal(calls.length,Object.keys(GUIDE_QUERIES).length+4);
   assert.equal(snapshot.deals.length,1);
   assert.equal(snapshot.categories[0].products.length,1);
   assert.equal(snapshot.guides['usb-c-phone-charger'].length,1);
