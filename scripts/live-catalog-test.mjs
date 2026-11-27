@@ -13,9 +13,10 @@ const jwk={...await crypto.subtle.exportKey('jwk',pair.publicKey),kid:'test',alg
 const claim={iss:'https://token.actions.githubusercontent.com',aud:AUDIENCE,repository:'magic76/crew-affiliate',repository_id:'1472854687',ref:'refs/heads/main',workflow_ref:'magic76/crew-affiliate/.github/workflows/catalog-publish.yml@refs/heads/main',sub:'repo:magic76/crew-affiliate:ref:refs/heads/main',event_name:'push',iat:seconds,nbf:seconds,exp:seconds+300};
 const b64=v=>Buffer.from(v).toString('base64url');
 async function jwt(c){const unsigned=b64(JSON.stringify({alg:'RS256',kid:'test'}))+'.'+b64(JSON.stringify(c));return unsigned+'.'+b64(await crypto.subtle.sign('RSASSA-PKCS1-v1_5',pair.privateKey,new TextEncoder().encode(unsigned)));}
-const fetchImpl=async u=>{assert.equal(u,'https://token.actions.githubusercontent.com/.well-known/jwks');return Response.json({keys:[jwk]});};
+const fetchImpl=async (u,opts)=>{assert.equal(opts.redirect,'manual');assert.equal(u,'https://token.actions.githubusercontent.com/.well-known/jwks');return Response.json({keys:[jwk]});};
 const verify=t=>authorize(t,{fetchImpl,now});
 const valid=await jwt(claim);assert(await verify(valid));
+assert.equal(await authorize(valid,{now,fetchImpl:async()=>new Response(null,{status:302,headers:{Location:'https://untrusted.invalid/jwks'}})}),false);
 assert(await verify(await jwt({...claim,sub:'custom:repo_id:1472854687'})));
 assert(await verify(await jwt({...claim,nbf:undefined,exp:seconds+3600})));
 assert(await verify(await jwt({...claim,iat:String(seconds),exp:String(seconds+300)})));
@@ -29,7 +30,7 @@ assert.equal((await catalogApi(post('bad'),env,{verify})).status,401);
 assert.equal((await catalogApi(post(valid,{...snapshot,fetchedAt:'2000-01-01T00:00:00Z'}),env,{verify})).status,400);
 assert.equal((await catalogApi(post(valid),env,{verify})).status,200);
 assert(data.has(KEY));
-const status=await (await catalogApi(new Request(url),env)).json();assert.equal(status.ready,true);assert.equal(status.protocol,3);
+const status=await (await catalogApi(new Request(url),env)).json();assert.equal(status.ready,true);assert.equal(status.protocol,4);
 const next=()=>new Response('fallback',{status:404});
 for(const path of ['/','/deals/','/categories/1/','/guides/usb-c-phone-charger/']){
  const res=await catalogPage(new Request('https://hicrewapps.com'+path),env,next,guides,products);
