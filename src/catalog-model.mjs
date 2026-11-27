@@ -47,7 +47,7 @@ function safeUrl(value,kind){
 export function normalizeProduct(p){
   if(!p||typeof p!=='object')return null;
   const productId=id(p.productId),productName=name(p.productName),productImage=safeUrl(p.productImage,'image'),productUrl=safeUrl(p.productUrl,'link');
-  if(!productId||!productName||!productImage||!productUrl||!Number.isFinite(p.productPrice)||p.productPrice<0)return null;
+  if(!productId||!productName||!productImage||!productUrl||!Number.isFinite(p.productPrice)||p.productPrice<=0)return null;
   return {productId,productName,productImage,productUrl,productPrice:p.productPrice,categoryName:name(p.categoryName)||'',isRocket:p.isRocket===true};
 }
 export function normalizeCategory(c){
@@ -75,4 +75,11 @@ export function validateCatalog(snapshot,now=new Date()){
   const guides=Object.fromEntries(Object.entries(GUIDE_QUERIES).map(([slug,g])=>[slug,products(Array.isArray(snapshot.guides[slug])?snapshot.guides[slug]:[]).filter(p=>g.match.test(p.productName))]));
   const expanded=products(Array.isArray(snapshot.expanded)?snapshot.expanded:[],MAX_EXPANDED_PRODUCTS);
   return {version:1,fetchedAt:new Date(fetched).toISOString(),deals,categories:cats,guides,expanded};
+}
+
+// Match only validated current catalog rows; no upstream calls or synthetic offers.
+export function guideOffers(catalog,slug){
+ const rule=GUIDE_QUERIES[slug];if(!catalog||!rule)return [];
+ const pool=[...(catalog.guides[slug]??[]),...catalog.deals,...catalog.categories.flatMap(c=>c.products),...(catalog.expanded??[]),...Object.values(catalog.guides).flat()];
+ return products(pool.filter(p=>rule.match.test(p.productName)),8);
 }
