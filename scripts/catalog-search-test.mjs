@@ -44,3 +44,8 @@ const coveragePages=render(guides,[],'',coverageSnapshot);
 for(const slug of ['usb-c-cable-60w-100w','detergent-unit-price','wireless-mouse']){const html=coveragePages['guides/'+slug+'/index.html'];assert(html.includes('id="guide-products"'));assert(html.includes('rel="sponsored nofollow noopener noreferrer"'));}
 assert(!coveragePages['guides/diaper-unit-price/index.html'].includes('id="guide-products"'));
 assert.throws(()=>validateCatalog({...coverageSnapshot,fetchedAt:new Date(Date.now()-3600001).toISOString()}));
+
+// Reject accessories regardless of where the exclusion occurs in the title.
+const detergentCoverage=validateCatalog({...snapshot,expanded:[product(81,'空瓶 洗衣精',99),product(82,'洗衣精 空瓶',99),product(83,'洗衣精瓶',99),product(84,'洗衣精收納架',99),product(85,'濃縮洗衣精 補充包',99)],guides:{...snapshot.guides,'detergent-unit-price':[product(86,'空瓶 洗衣精',99)]}});
+assert.deepEqual(guideOffers(detergentCoverage,'detergent-unit-price').map(p=>p.productId),['3','85']);
+assert.deepEqual(detergentCoverage.guides['detergent-unit-price'],[]);
