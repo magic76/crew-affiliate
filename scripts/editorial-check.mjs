@@ -1,3 +1,4 @@
+import {GUIDE_QUERIES} from '../src/catalog-model.mjs';
 import {readFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {APPROVED_GUIDES} from '../src/seo.mjs';
@@ -5,7 +6,9 @@ const guides=JSON.parse(await readFile('data/guides.json','utf8')),queue=JSON.pa
 const clean=s=>typeof s==='string'&&s.trim()===s&&s.length>0;
 const https=s=>{try{const u=new URL(s);return u.protocol==='https:'&&!u.username&&!u.password&&!u.port;}catch{return false;}};
 const unique=(rows,label)=>assert.equal(new Set(rows).size,rows.length,'Duplicate '+label);
-unique(guides.map(g=>g.slug),'guide slug');unique(guides.map(g=>g.title),'guide title');unique(guides.map(g=>g.description),'guide description');
+unique(guides.map(g=>g.slug),'guide slug');
+assert.deepEqual([...APPROVED_GUIDES].sort(),guides.map(g=>g.slug).sort());
+assert.deepEqual(Object.keys(GUIDE_QUERIES).sort(),guides.map(g=>g.slug).sort());unique(guides.map(g=>g.title),'guide title');unique(guides.map(g=>g.description),'guide description');
 for(const slug of APPROVED_GUIDES){
  const g=guides.find(x=>x.slug===slug);assert(g,'Approved guide missing: '+slug);
  assert(clean(g.title)&&g.title.length<=100&&clean(g.description)&&g.description.length<=200);

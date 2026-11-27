@@ -83,11 +83,11 @@
       "angle": "提供購買前核對方式及官方來源，與既有指南互補。",
       "evidence": [
         {
-          "url": "https://www.bsmi.gov.tw/wSite/ct?ctNode=2595&mp=58&xItem=116253",
+          "url": "https://www.bsmi.gov.tw/wSite/ct?ctNode=9885&mp=58&xItem=116253",
           "type": "manufacturer-or-authority"
         }
       ],
-      "status": "candidate",
+      "status": "published",
       "searchVolume": null,
       "competition": null,
       "researchedOn": "2026-11-27"
@@ -155,11 +155,15 @@
       "angle": "同尺寸、片數與用途；不推測成分或醫療效果。",
       "evidence": [
         {
-          "url": "https://most.tw/posts/blog/household-essentials-guide-2026/",
-          "type": "existing-search-result"
+          "url": "https://www.nukevent.com.tw/products/household-cleaning-wipes-80",
+          "type": "manufacturer-or-authority"
+        },
+        {
+          "url": "https://www.naisencaringshop.com/products/1050012-6",
+          "type": "manufacturer-or-authority"
         }
       ],
-      "status": "candidate",
+      "status": "published",
       "searchVolume": null,
       "competition": null,
       "researchedOn": "2026-11-27"
@@ -191,11 +195,11 @@
       "angle": "同容量單位與稀釋條件，避免濃縮與一般品直接比較。",
       "evidence": [
         {
-          "url": "https://most.tw/posts/blog/household-essentials-guide-2026/",
-          "type": "existing-search-result"
+          "url": "https://www.ecosway.com.tw/Series/Powermax%E7%B3%BB%E5%88%97/0897AN",
+          "type": "manufacturer-or-authority"
         }
       ],
-      "status": "candidate",
+      "status": "published",
       "searchVolume": null,
       "competition": null,
       "researchedOn": "2026-11-27"
@@ -254,6 +258,340 @@
         },
         {
           "url": "https://support.apple.com/zh-tw/102477",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "extension-cord",
+      "keyword": "延長線 選購",
+      "cluster": "居家用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "比較延長線額定功率、長度、插座配置及過載保護，避免把插孔數當作可用電量。",
+      "evidence": [
+        {
+          "url": "https://www.bsmi.gov.tw/wSite/ct?ctNode=3596&xItem=100318",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "travel-plug-adapter",
+      "keyword": "旅行轉接頭 選購",
+      "cluster": "旅行用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "出國前依目的地插座和電器輸入標示選轉接頭，區分轉接與變壓功能。",
+      "evidence": [
+        {
+          "url": "https://www.bsmi.gov.tw/wSite/fp?ctNode=6014&mp=1&xItem=40681",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "hdmi-cable-4k",
+      "keyword": "HDMI 傳輸線 選購",
+      "cluster": "電腦配件",
+      "intent": 3,
+      "fit": 3,
+      "angle": "依螢幕、遊戲機及顯示卡的輸出要求挑選 HDMI 線，核對解析度、更新率、頻寬與長度。",
+      "evidence": [
+        {
+          "url": "https://www.hdmi.org/spec/premiumcable",
+          "type": "manufacturer-or-authority"
+        },
+        {
+          "url": "https://www.hdmi.org/spec21sub/ultrahighspeedcable",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "wireless-mouse",
+      "keyword": "無線滑鼠 選購",
+      "cluster": "電腦配件",
+      "intent": 3,
+      "fit": 3,
+      "angle": "依連線方式、電腦連接埠、手掌尺寸與攜帶場景挑選無線滑鼠。",
+      "evidence": [
+        {
+          "url": "https://www.logitech.com/zh-tw/setup/ergosetup/mouse-setup.html",
+          "type": "manufacturer-or-authority"
+        },
+        {
+          "url": "https://www.osha.gov/etools/computer-workstations/components/pointer-mouse/",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "wireless-keyboard",
+      "keyword": "無線鍵盤 選購",
+      "cluster": "電腦配件",
+      "intent": 3,
+      "fit": 3,
+      "angle": "比較鍵盤配置、桌面空間、連線及作業系統，依文書與跨裝置需求挑選。",
+      "evidence": [
+        {
+          "url": "https://www.osha.gov/etools/computer-workstations/components/keyboards/",
+          "type": "manufacturer-or-authority"
+        },
+        {
+          "url": "https://www.logitech.com/zh-tw/shop/p/k780-multi-device-wireless-keyboard.920-008029",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "laptop-stand",
+      "keyword": "筆電支架 選購",
+      "cluster": "電腦配件",
+      "intent": 3,
+      "fit": 3,
+      "angle": "依筆電尺寸、桌面深度、支架高度及外接鍵鼠需求挑選支架，避免只看可升高多少。",
+      "evidence": [
+        {
+          "url": "https://www.osha.gov/etools/computer-workstations/checklists/purchasing-guide",
+          "type": "manufacturer-or-authority"
+        },
+        {
+          "url": "https://www.osha.gov/etools/computer-workstations/components/monitors/",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "wireless-charger",
+      "keyword": "無線充電器 選購",
+      "cluster": "手機配件",
+      "intent": 3,
+      "fit": 3,
+      "angle": "依手機無線充電支援、擺放方式、供電配件及商品檢驗標識挑選充電座。",
+      "evidence": [
+        {
+          "url": "https://www.bsmi.gov.tw/wSite/ct?ctNode=8745&mp=1&xItem=91366",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "food-container",
+      "keyword": "保鮮盒 選購",
+      "cluster": "廚房用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "依冷藏、攜帶及微波需求核對食品容器材質、耐熱標示、尺寸及使用警語。",
+      "evidence": [
+        {
+          "url": "https://www.fda.gov.tw/Tc/siteListContent.aspx?id=27780&sid=3388",
+          "type": "manufacturer-or-authority"
+        },
+        {
+          "url": "https://www.fda.gov.tw/TC/csmnewsContent.aspx?id=t634765&mid=267",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "storage-box-size",
+      "keyword": "收納箱 選購",
+      "cluster": "居家用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "購買收納箱前先量櫃子開口、物件尺寸及堆疊高度，不用只靠公升數選擇。",
+      "evidence": [
+        {
+          "url": "https://www.ikea.com.tw/zh/products/boxes-and-organisers/boxes-and-baskets/samla-spr-39440828",
+          "type": "manufacturer-or-authority"
+        },
+        {
+          "url": "https://www.ikea.com.tw/zh/products/boxes-and-organisers/boxes-and-baskets/samla-spr-49440837",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "vacuum-bottle",
+      "keyword": "保溫瓶 選購",
+      "cluster": "居家用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "比較保溫瓶容量、空瓶重量、瓶口與上蓋清潔方式，依通勤或外出時間挑選。",
+      "evidence": [
+        {
+          "url": "https://www.zojirushi.com.tw/faq/7",
+          "type": "manufacturer-or-authority"
+        },
+        {
+          "url": "https://www.zojirushi.com.tw/SMMZG/index.html",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "water-filter-cartridge",
+      "keyword": "濾水壺 濾芯 選購",
+      "cluster": "廚房用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "比較濾水壺耗材的適用型號、建議更換週期、額定處理量及每公升成本。",
+      "evidence": [
+        {
+          "url": "https://www.brita.tw/faq",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "moisture-absorber",
+      "keyword": "除濕盒 選購",
+      "cluster": "居家用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "依衣櫃、鞋櫃等小空間及擺放條件比較除濕盒、吊掛袋與補充包。",
+      "evidence": [
+        {
+          "url": "https://www.farcent.com.tw/contact02",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "toothbrush-refill",
+      "keyword": "電動牙刷 替換刷頭 選購",
+      "cluster": "生活用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "購買替換刷頭前先查牙刷型號、刷頭系列與使用說明，再比較單顆含運成本。",
+      "evidence": [
+        {
+          "url": "https://oralb.com.tw/refill/",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "clothes-hanger",
+      "keyword": "衣架 選購",
+      "cluster": "居家用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "依衣物肩寬、重量、衣櫃深度及吊桿長度比較衣架，避免只按入數買。",
+      "evidence": [
+        {
+          "url": "https://www.ikea.com.tw/zh/products/clothes-and-shoe-organisers-and-accessories/hangers-and-acc-for-clothes-and-sho/bumerang-art-30238538",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "garbage-bag-size",
+      "keyword": "垃圾袋 選購",
+      "cluster": "居家用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "比較家用垃圾桶內袋尺寸與每入價格，另確認所在地是否要求專用垃圾袋。",
+      "evidence": [
+        {
+          "url": "https://www.epd.ntpc.gov.tw/StaticPage/baginfo",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "dishwasher-tablets",
+      "keyword": "洗碗錠 選購",
+      "cluster": "廚房用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "比較洗碗機專用洗劑的包裝錠數、機型說明、用量及每次洗滌成本。",
+      "evidence": [
+        {
+          "url": "https://finish.com.tw/portfolio-item/%E4%BA%AE%E7%A2%9F%E5%85%A8%E6%95%88%E5%90%88%E4%B8%80%E6%B4%97%E7%A2%97%E5%A1%8A/",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "laundry-capsule",
+      "keyword": "洗衣膠囊 選購",
+      "cluster": "家庭省錢",
+      "intent": 3,
+      "fit": 3,
+      "angle": "依原廠用量、包裝顆數、洗衣頻率及保存條件比較洗衣膠囊的實際成本。",
+      "evidence": [
+        {
+          "url": "https://www.costco.com.tw/Household-Baby-Toys/Household-Essentials/Laundry-Care/Ariel-4D-Antibacterial-Anti-Mite-Laundry-Capsules-70-Count-X-2-Pack/p/337700",
           "type": "manufacturer-or-authority"
         }
       ],

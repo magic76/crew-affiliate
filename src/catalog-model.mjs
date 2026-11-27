@@ -10,7 +10,27 @@ export const GUIDE_QUERIES=Object.freeze({
   'power-bank-capacity':{keyword:'行動電源',match:/行動電源|power bank/i},
   'usb-c-hub-hdmi':{keyword:'USB C 集線器',match:/集線器|擴充基座|hub|多功能轉接/i},
   'kitchen-paper-unit-price':{keyword:'廚房紙巾',match:/廚房紙巾|廚房用紙/i},
-  'detergent-unit-price':{keyword:'洗衣精',match:/(?=.*洗衣精)(?!.*(?:空瓶|洗衣精瓶|洗衣精收納))/i}
+  'detergent-unit-price':{keyword:'洗衣精',match:/(?=.*洗衣精)(?!.*(?:空瓶|洗衣精瓶|洗衣精收納))/i},
+  "charger-safety":{keyword:"充電器",match:/充電器|充電頭|charger/i},
+  "extension-cord":{keyword:"延長線",match:/延長線|電源線組/i},
+  "travel-plug-adapter":{keyword:"旅行轉接頭",match:/旅行轉接|萬用轉接|轉接插頭|國際轉接/i},
+  "hdmi-cable-4k":{keyword:"HDMI 傳輸線",match:/HDMI.*(?:線|cable)|(?:線|cable).*HDMI/i},
+  "wireless-mouse":{keyword:"無線滑鼠",match:/(?:無線|藍牙).*(?:滑鼠|mouse)|(?:滑鼠|mouse).*(?:無線|藍牙)/i},
+  "wireless-keyboard":{keyword:"無線鍵盤",match:/(?:無線|藍牙).*(?:鍵盤|keyboard)|(?:鍵盤|keyboard).*(?:無線|藍牙)/i},
+  "laptop-stand":{keyword:"筆電支架",match:/筆電支架|筆記型電腦支架|laptop stand/i},
+  "wireless-charger":{keyword:"無線充電器",match:/無線充電器|無線充電座|wireless charger/i},
+  "food-container":{keyword:"保鮮盒",match:/保鮮盒|便當盒|食品容器/i},
+  "storage-box-size":{keyword:"收納箱",match:/收納箱|收納盒|整理箱/i},
+  "vacuum-bottle":{keyword:"保溫瓶",match:/保溫瓶|保溫杯|保溫壺/i},
+  "water-filter-cartridge":{keyword:"濾水壺 濾芯",match:/濾芯|濾水壺/i},
+  "moisture-absorber":{keyword:"除濕盒",match:/除濕盒|除濕桶|除濕袋|除濕補充/i},
+  "toothbrush-refill":{keyword:"電動牙刷 替換刷頭",match:/刷頭|替換刷|替換頭/i},
+  "clothes-hanger":{keyword:"衣架",match:/衣架|衣褲架/i},
+  "garbage-bag-size":{keyword:"垃圾袋",match:/垃圾袋|清潔袋/i},
+  "wet-wipes-unit-price":{keyword:"濕紙巾",match:/濕紙巾|濕巾/i},
+  "dish-liquid-unit-price":{keyword:"洗碗精",match:/洗碗精|餐具洗潔/i},
+  "dishwasher-tablets":{keyword:"洗碗錠",match:/洗碗錠|洗碗塊|洗碗機.*(?:清潔錠|洗劑|洗滌錠)/i},
+  "laundry-capsule":{keyword:"洗衣膠囊",match:/洗衣膠囊|洗衣球|洗衣凝珠/i}
 });
 const id=v=>(typeof v==='string'||Number.isSafeInteger(v))&&/^[1-9]\d{0,15}$/.test(String(v))?String(v):null;
 const name=v=>typeof v==='string'&&v.trim().length>0&&v.length<=200?v.trim():null;

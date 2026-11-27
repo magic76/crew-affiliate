@@ -14,10 +14,12 @@ export async function fetchRows({path,query='',accessKey,secretKey,fetchImpl=fet
 }
 export async function syncCatalog({accessKey,secretKey,fetchImpl=fetch,now=new Date(),expand=true,delay=ms=>new Promise(resolve=>setTimeout(resolve,ms))}){
   const request=(path,query='')=>fetchRows({path,query,accessKey,secretKey,fetchImpl});
-  const [rawDeals,rawCategories,...rawGuides]=await Promise.all([
-    request(PRODUCT_PATHS.goldbox),request(PRODUCT_PATHS.hotcategories),
-    ...Object.values(GUIDE_QUERIES).map(g=>request(PRODUCT_PATHS.search,'keyword='+encodeURIComponent(g.keyword)+'&limit=5'))
-  ]);
+  const [rawDeals,rawCategories]=await Promise.all([request(PRODUCT_PATHS.goldbox),request(PRODUCT_PATHS.hotcategories)]);
+  const rawGuides=[];
+  for(const g of Object.values(GUIDE_QUERIES)){
+    if(expand)await delay(2000);
+    rawGuides.push(await request(PRODUCT_PATHS.search,'keyword='+encodeURIComponent(g.keyword)+'&limit=5'));
+  }
   const deals=products(rawDeals),cats=categories(rawCategories);
   if(!deals.length||!cats.length)throw new Error('No usable deals or categories; refuse replacement');
   const categoryResults=[];
@@ -36,6 +38,7 @@ export async function syncCatalog({accessKey,secretKey,fetchImpl=fetch,now=new D
   if(entries.some(([slug])=>guides[slug].length===0)){
     // One bounded fallback using the previously verified broad search keyword.
     try{
+      if(expand)await delay(2000);
       const rows=await request(PRODUCT_PATHS.search,'keyword=USB-C&limit=5');
       const usable=products(rows);
       fallback={returned:rows.length,usable:usable.length};
