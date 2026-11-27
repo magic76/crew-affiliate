@@ -1,3 +1,4 @@
+import {checkIdentity} from '../src/live-catalog.mjs';
 import {verifyPublished} from '../src/catalog-readback.mjs';
 import {syncCatalog,validateCatalog} from '../src/catalog.mjs';
 const endpoint='https://hicrewapps.com/api/catalog';
@@ -10,7 +11,7 @@ async function waitForEndpoint(){
       const res=await fetch(endpoint,{redirect:'error',signal:AbortSignal.timeout(10000),headers:{'Cache-Control':'no-cache'}});
       if(res.ok&&res.headers.get('Content-Type')?.includes('application/json')){
         const status=await res.json();
-        if(status.enabled===true&&status.protocol===2)return true;
+        if(status.enabled===true&&status.protocol===3)return true;
         if(status.enabled===false){disabled=true;if(process.env.GITHUB_EVENT_NAME!=='push')return false;}
       }
     }catch{}
@@ -28,7 +29,7 @@ async function token(){
   const body=await response.json();if(typeof body.value!=='string')throw Error('OIDC unavailable');
   return body.value;
 }
-let stage='preflight',httpStatus=null;
+let stage='preflight',httpStatus=null,authCheck=null;
 try{
   if(process.env.GITHUB_REPOSITORY!=='magic76/crew-affiliate'||process.env.GITHUB_REF!=='refs/heads/main')throw Error('Not main');
   if(!await waitForEndpoint()){console.log('Catalog publishing disabled or endpoint not available. No provider request made.');process.exit(0);}
@@ -38,13 +39,20 @@ try{
   const jwt=await token();
   const claims=JSON.parse(Buffer.from(jwt.split('.')[1],'base64url').toString('utf8'));
   console.log(JSON.stringify({identityChecks:{aud:claims.aud===endpoint,issuer:claims.iss==='https://token.actions.githubusercontent.com',repository:claims.repository==='magic76/crew-affiliate',repositoryId:String(claims.repository_id)==='1472854687',ref:claims.ref==='refs/heads/main',workflow:claims.workflow_ref==='magic76/crew-affiliate/.github/workflows/catalog-publish.yml@refs/heads/main',subjectPresent:typeof claims.sub==='string'&&claims.sub.length>0}}));
+  authCheck=await checkIdentity(jwt);
+  console.log(JSON.stringify({localOidcVerification:authCheck}));
+  if(authCheck!=='ok')throw Error('Local identity validation failed');
   stage='upload';
   const res=await fetch(endpoint,{method:'POST',headers:{Authorization:'Bearer '+jwt,'Content-Type':'application/json'},body:JSON.stringify(snapshot),redirect:'error',signal:AbortSignal.timeout(20000)});
   httpStatus=res.status;
-  if(!res.ok)throw Error('Catalog upload rejected');
+  if(!res.ok){
+    const failure=await res.json().catch(()=>({}));
+    authCheck=['format','claims','time','jwks','key','signature','invalid'].includes(failure.check)?failure.check:null;
+    throw Error('Catalog upload rejected');
+  }
   const result=await res.json();
   if(result.ok!==true)throw Error('Upload not acknowledged');
   stage='public-readback';
   const verifiedPages=await verifyPublished(snapshot);
   console.log(JSON.stringify({published:true,verifiedPages,deals:snapshot.deals.length,categories:snapshot.categories.length,guideMatches:Object.fromEntries(Object.entries(snapshot.guides).map(([k,v])=>[k,v.length]))}));
-}catch{console.error(JSON.stringify({published:false,stage,httpStatus}));process.exitCode=1;}
+}catch{console.error(JSON.stringify({published:false,stage,httpStatus,authCheck}));process.exitCode=1;}
