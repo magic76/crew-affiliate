@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
-      - name: Offline, SEO and publication handshake checks
+      - name: Offline, comparison and publication handshake checks
         run: npm run build && npm test
       - name: Search normalization diagnostic
         env:
