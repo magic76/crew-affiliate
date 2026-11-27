@@ -1,7 +1,7 @@
 name: Coupang Partners API smoke
 on:
   push:
-    branches: [chatgpt/editorial-quality]
+    branches: [chatgpt/product-compare]
     paths: ['.github/workflows/coupang-smoke.yml']
   workflow_dispatch:
 permissions:
