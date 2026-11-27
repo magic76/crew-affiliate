@@ -94,7 +94,7 @@ export async function catalogApi(request,env,{verify=checkIdentity}={}){
 function route(path){
   if(path==='/'||path==='/index.html'||path==='/index')return 'index.html';
   const clean=path.replace(/\/(?:index(?:\.html)?)$/,'/').replace(/\/$/,'');
-  if(/^\/(?:deals|categories\/[1-9]\d{0,15}|guides\/[a-z0-9-]+)$/.test(clean))return clean.slice(1)+'/index.html';
+  if(/^\/(?:search|deals|categories\/[1-9]\d{0,15}|guides\/[a-z0-9-]+)$/.test(clean))return clean.slice(1)+'/index.html';
   return null;
 }
 export async function catalogPage(request,env,next,guides,products){
@@ -103,8 +103,8 @@ export async function catalogPage(request,env,next,guides,products){
   const key=route(url.pathname);
   if(!key)return next();
   const current=await readCatalog(env);
-  if(!current)return next();
-  const html=render(guides,products,'',current)[key];
+  if(!current&&key!=='search/index.html')return next();
+  const html=render(guides,products,'',current,url.searchParams)[key];
   if(!html)return next();
   return new Response(request.method==='HEAD'?null:html,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','X-Robots-Tag':'noindex, follow','Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff'}});
 }
