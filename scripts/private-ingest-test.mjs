@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {privateIngest,validateGsc} from '../src/private-ingest.mjs';
+const v={version:1,property:'sc-domain:hicrewapps.com',period:{start:'2026-11-17',end:'2026-11-23'},total:{clicks:2,impressions:20,position:10},daily:[{date:'2026-11-17',clicks:2,impressions:20,position:10}],opportunities:[{query:'充電器',clicks:2,impressions:20,position:10}],possiblyTruncated:false};
+assert.deepEqual(validateGsc(v),v);assert.throws(()=>validateGsc({...v,property:'sc-domain:koolo.app'}));assert.throws(()=>validateGsc({...v,daily:[...v.daily,...v.daily]}));
+const stored=new Map(),env={CATALOG_PUBLISH_ENABLED:'1',CATALOG_KV:{put:async(k,v,o)=>{assert.equal(o.expirationTtl,604800);stored.set(k,v)}}};
+const url='https://hicrewapps.com/api/private-gsc',req=body=>new Request(url,{method:'POST',headers:{Authorization:'Bearer fixture','Content-Type':'application/json'},body:JSON.stringify(body)});
+assert.equal((await privateIngest(new Request(url,{method:'HEAD'}),env,'gsc')).status,204);
+assert.equal((await privateIngest(new Request(url),env,'gsc')).status,404);
+assert.equal((await privateIngest(req(v),env,'gsc',{verify:async()=> 'claims'})).status,401);
+assert.equal((await privateIngest(req(v),env,'gsc',{verify:async()=> 'ok'})).status,200);
+assert(stored.has('private-gsc-v1'));assert.equal((await privateIngest(req(v),env,'draft',{verify:async()=> 'ok'})).status,400);
+console.log('Private GSC validation, auth, storage and draft isolation checks passed');
