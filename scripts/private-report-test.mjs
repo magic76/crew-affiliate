@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {collectGsc,reportWindow,summarizeMetrics,summarizeCommission,buildReport} from '../src/private-report.mjs';
+const p={start:'2026-11-17',end:'2026-11-23'};
+assert.deepEqual(reportWindow(new Date('2026-11-27T20:00:00Z')),p);
+const metrics=[{day:p.start,page:'/',event:'pageview',provider:'',count:10},{day:p.start,page:'/',event:'affiliate_click',provider:'coupang',count:3}];
+assert.equal(summarizeMetrics(metrics,p).total.clicksPerView,.3);assert.equal(summarizeMetrics([],p).total.clicksPerView,null);assert.throws(()=>summarizeMetrics([{...metrics[0],page:'/?q=x'}],p));
+const commission=[{day:p.start,currency:'TWD',status:'pending',orders:2,commission:50},{day:p.start,currency:'TWD',status:'paid',orders:1,commission:20}];
+assert.equal(summarizeCommission(commission,p).byStatus.paid.commission,20);assert.throws(()=>summarizeCommission([...commission,commission[0]],p));assert.throws(()=>summarizeCommission([{...commission[0],currency:'USD'}],p));
+let calls=0;const gsc=await collectGsc('test',p,async(url,opts)=>{calls++;assert.equal(url,'https://www.googleapis.com/webmasters/v3/sites/sc-domain%3Ahicrewapps.com/searchAnalytics/query');assert.equal(opts.headers.Authorization,'Bearer test');assert.equal(opts.redirect,'error');const b=JSON.parse(opts.body);assert.equal(b.dataState,'final');return Response.json({rows:[{keys:b.dimensions.map(x=>x==='query'?'USB-C':x==='page'?'https://hicrewapps.com/':p.start),clicks:2,impressions:20,ctr:.1,position:12}]});});assert.equal(calls,4);
+const report=buildReport({period:p,metrics,gsc,commission});assert.equal(report.gsc.opportunities.length,1);assert.equal(buildReport({period:p}).commission,null);assert.throws(()=>buildReport({period:p,gsc:{...gsc,property:'sc-domain:koolo.app'}}));await assert.rejects(()=>collectGsc('',p));console.log('Private GSC, metrics and normalized commission report tests passed');
