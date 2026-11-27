@@ -1,0 +1,28 @@
+name: Gemini private editorial draft
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/editorial-live.yml','src/editorial-live-brief.mjs','scripts/editorial-live.mjs','src/editorial-draft.mjs']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: editorial-live
+  cancel-in-progress: false
+jobs:
+  generate:
+    if: github.repository == 'magic76/crew-affiliate' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - run: node scripts/editorial-draft-test.mjs && node --check scripts/editorial-live.mjs
+      - run: node scripts/editorial-live.mjs
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || secrets.GEMINI_MODEL }}

@@ -3,6 +3,7 @@ import {validateCoupangReport} from './coupang-report.mjs';
 export const REPORT_KEY='private-coupang-report-v1';
 const json=(body,status)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Robots-Tag':'noindex','X-Content-Type-Options':'nosniff'}});
 export async function ingestReport(request,env,{verify=t=>checkIdentity(t,{purpose:'report'})}={}){
+ if(new URL(request.url).origin==='https://hicrewapps.com'&&request.method==='HEAD')return new Response(null,{status:env.CATALOG_KV&&env.CATALOG_PUBLISH_ENABLED==='1'?204:503,headers:{'Cache-Control':'no-store','X-Robots-Tag':'noindex'}});
  if(new URL(request.url).origin!=='https://hicrewapps.com'||request.method!=='POST')return json({error:'not found'},404);
  const auth=request.headers.get('Authorization')??'';
  if(!auth.startsWith('Bearer ')||await verify(auth.slice(7))!=='ok')return json({error:'unauthorized'},401);

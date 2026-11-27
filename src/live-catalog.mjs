@@ -27,7 +27,7 @@ export async function checkIdentity(token,{fetchImpl=fetch,now=Date.now(),purpos
     const seconds=Math.floor(now/1000);
     if(header.alg!=='RS256'||typeof header.kid!=='string'||!header.kid.length||header.kid.length>200)return stage;
     stage='claims';
-    const policies={catalog:{aud:AUDIENCE,repo:'magic76/crew-affiliate',id:REPO_ID,workflow:WORKFLOW},report:{aud:'https://hicrewapps.com/api/private-report',repo:'magic76/crew-affiliate',id:REPO_ID,workflow:'magic76/crew-affiliate/.github/workflows/coupang-report-live.yml@refs/heads/main'}};
+    const policies={gsc:{aud:'https://hicrewapps.com/api/private-gsc',repo:'magic76/crew-seo',id:'1473953409',workflow:'magic76/crew-seo/.github/workflows/gsc-daily.yml@refs/heads/main'},draft:{aud:'https://hicrewapps.com/api/private-draft',repo:'magic76/crew-affiliate',id:REPO_ID,workflow:'magic76/crew-affiliate/.github/workflows/editorial-live.yml@refs/heads/main'},catalog:{aud:AUDIENCE,repo:'magic76/crew-affiliate',id:REPO_ID,workflow:WORKFLOW},report:{aud:'https://hicrewapps.com/api/private-report',repo:'magic76/crew-affiliate',id:REPO_ID,workflow:'magic76/crew-affiliate/.github/workflows/coupang-report-live.yml@refs/heads/main'}};
     const policy=policies[purpose];if(!policy)return stage;
     if(claims.iss!==ISSUER||claims.aud!==policy.aud||claims.repository!==policy.repo||String(claims.repository_id)!==policy.id||claims.ref!=='refs/heads/main'||claims.workflow_ref!==policy.workflow||(typeof claims.sub!=='string'||!claims.sub.length)||!['push','schedule','workflow_dispatch'].includes(claims.event_name))return stage;
     stage='time';

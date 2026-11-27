@@ -6,6 +6,8 @@ try{
  if(process.env.GITHUB_REPOSITORY!=='magic76/crew-affiliate'||process.env.GITHUB_REF!=='refs/heads/main')throw Error('Not main');
  const accessKey=process.env.COUPANG_ACCESS_KEY,secretKey=process.env.COUPANG_SECRET_KEY,subId=process.env.COUPANG_REPORT_SUB_ID??'';
  if(!accessKey||!secretKey)throw Error('Missing credentials');
+ stage='deployment-ready';
+ let ready=false;for(let i=0;i<24;i++){try{ready=(await fetch(endpoint,{method:'HEAD',redirect:'error',signal:AbortSignal.timeout(10000)})).status===204;}catch{}if(ready)break;if(i<23)await new Promise(r=>setTimeout(r,10000));}if(!ready)throw Error('Endpoint not ready');
  stage='provider';
  const report=await collectCoupangReports({...taipeiReportWindow(),subId,request:(path,query)=>fetchRows({path,query,accessKey,secretKey})});
  stage='identity';

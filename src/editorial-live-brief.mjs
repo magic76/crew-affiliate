@@ -1,0 +1,2 @@
+// Reviewed public evidence, not a finished or approved article.
+export const seed={topic:{id:'charger-safety',keyword:'充電器 BSMI 商品檢驗標識',angle:'購買前核對檢驗標識、廠商、型號、規格，避免以高瓦數當作安全保證。',cluster:'3C',status:'candidate'},evidence:[{id:'bsmi',label:'標準檢驗局：選購及使用快充型充電器實用小技巧',url:'https://www.bsmi.gov.tw/wSite/ct?ctNode=9885&mp=58&xItem=116253',checkedOn:'2026-11-27',notes:'標檢局提醒選購時認明本體商品檢驗標識，查看廠商、型號與規格是否清楚；選購不能只考量功能、外型和價格。'}]};
