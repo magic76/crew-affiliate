@@ -40,3 +40,5 @@ data/guides.json 是指南來源；data/products.json 包含一筆一般商品�
 ## 正式商品發布（受控試行）
 
 Cloudflare Pages Functions + KV: CATALOG_KV 綁定只在 production，CATALOG_PUBLISH_ENABLED=1 開啟正式商品；0 關閉並回退靜態網站。僅 hicrewapps.com 可用，頁面維持 noindex。GitHub Actions catalog-publish.yml 以限定 repo/main/工作流的 OIDC 短效 JWT 授權上傳，金鑰留在 GitHub Secrets。快照最長一小時，過期或資料異常時回退；每 30 分鐘嘗試刷新（GitHub cron 可能延遲）。不保存原始 API 回應、不提交商品資料、不傳用戶識別資料、不製造曝光、不點擊連結。仍需核對媒體登錄與官方資料使用條款，若平台要求更短保留或不允許展示則停用並調整。報表與 AI 產文不包含在此次變更。
+
+- 正式同步成功必須讀回新鮮快照狀態及首頁、特價頁、分類頁與有配對的指南頁 HTML；檢查商品卡、價格與 sponsored 連結標記，不開啟商品 URL。若發布端點無法存取或頁面未更新則 CI 失敗，不將未發布誤報為成功。
