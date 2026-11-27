@@ -64,7 +64,7 @@ for(const path of ['/search/?q=USB-C','/deals/','/categories/1/']){
 const alias=await catalogPage(new Request('https://hicrewapps.com/guides/usb-c-phone-charger/index.html?utm_source=test'),seo,next,guides,products);
 assert.equal(alias.status,301);assert.equal(alias.headers.get('Location'),'https://hicrewapps.com/guides/usb-c-phone-charger/?utm_source=test');
 const map=await catalogPage(new Request('https://hicrewapps.com/sitemap.xml'),seo,next,guides,products);
-assert.equal(map.status,200);const xml=await map.text();assert.equal((xml.match(/<loc>/g)||[]).length,7);for(const path of urls)assert(xml.includes('<loc>https://hicrewapps.com'+path+'</loc>'));
+assert.equal(map.status,200);const xml=await map.text();assert.equal((xml.match(/<loc>/g)||[]).length,urls.length);for(const path of urls)assert(xml.includes('<loc>https://hicrewapps.com'+path+'</loc>'));
 assert(!xml.includes('/search/'));assert(!xml.includes('/deals/'));assert(!xml.includes('/categories/'));
 const robots=await catalogPage(new Request('https://hicrewapps.com/robots.txt'),seo,next,guides,products);assert((await robots.text()).includes('Sitemap: https://hicrewapps.com/sitemap.xml'));
 assert.equal((await catalogPage(new Request('https://hicrewapps.com/sitemap.xml'),env,next,guides,products)).status,404);
