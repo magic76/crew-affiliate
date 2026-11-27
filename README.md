@@ -62,3 +62,7 @@ Production-only METRICS_ENABLED=1 and METRICS_DB binding to dedicated D1. Apply 
 ## Editorial workflow
 
 `data/topic-queue.json` contains observed search-result and manufacturer evidence, editorial fit/intent hypotheses, and null search-volume/competition. `node scripts/editorial-check.mjs --topics` prints candidate briefs. Existing-guide topics should be merged into their existing page rather than creating duplicate entry points. Before adding a guide to APPROVED_GUIDES, require original actionable analysis, source links and review, scenarios, FAQs, unique metadata, actual product matching, no fabricated experience or prices, and human/agent evidence review. Structural tests are not fact-checking. JSON-LD Article/BreadcrumbList only on approved canonical guides; no Product/Review/rating claims. Google Search spam policy: https://developers.google.com/search/docs/essentials/spam-policies. No automatic AI publishing or real GSC volume data yet.
+
+## 商品比較
+
+`/compare/` 支援比較最多三件新鮮快照商品，只顯示 API 已提供的名稱、價格、分類與配送；不推測規格、不以價格判定品質，過期或不存在的商品不顯示。比較結果和參數維持 noindex；不保存使用者選擇、不增加酷澎 API 請求。直接 sponsored 連結保留。
