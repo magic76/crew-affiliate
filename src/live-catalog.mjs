@@ -21,8 +21,9 @@ export async function authorize(token,{fetchImpl=fetch,now=Date.now()}={}){
     if(parts.length!==3)return false;
     const [h,p,s]=parts,header=parse(h),claims=parse(p);
     const seconds=Math.floor(now/1000);
+    // GitHub subject templates may be customized. Authorize by signed immutable repo ID, exact workflow, ref and event instead.
     if(header.alg!=='RS256'||typeof header.kid!=='string'||header.kid.length>200)return false;
-    if(claims.iss!==ISSUER||claims.aud!==AUDIENCE||claims.repository!=='magic76/crew-affiliate'||claims.repository_id!==REPO_ID||claims.ref!=='refs/heads/main'||claims.workflow_ref!==WORKFLOW||claims.sub!=='repo:magic76/crew-affiliate:ref:refs/heads/main'||!['push','schedule','workflow_dispatch'].includes(claims.event_name))return false;
+    if(claims.iss!==ISSUER||claims.aud!==AUDIENCE||claims.repository!=='magic76/crew-affiliate'||String(claims.repository_id)!==REPO_ID||claims.ref!=='refs/heads/main'||claims.workflow_ref!==WORKFLOW||(typeof claims.sub!=='string'||!claims.sub.length)||!['push','schedule','workflow_dispatch'].includes(claims.event_name))return false;
     if(!Number.isFinite(claims.exp)||!Number.isFinite(claims.iat)||!Number.isFinite(claims.nbf)||claims.exp<=seconds||claims.nbf>seconds+30||claims.iat>seconds+30||claims.exp-claims.iat>600||seconds-claims.iat>600)return false;
     const res=await fetchImpl(ISSUER+'/.well-known/jwks',{redirect:'error',signal:AbortSignal.timeout(5000)});
     if(!res.ok)return false;
