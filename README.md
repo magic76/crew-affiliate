@@ -14,3 +14,23 @@ data/guides.json 是指南來源；data/products.json 包含一筆一般商品�
 - 確認聯盟 API 權限、Sub_id、佣金與訂單資料，建立商品同步及報表。
 - 確認正式網址及分析隱私規範，接 Search Console/GA4。
 - 自動產文及排程尚未實作；不以文章數量為 KPI，不假造實測。
+
+## 酷澎 Partners（台灣）
+
+1. 登入 https://partners.tw.coupang.com/ ，確認推廣資格與 hicrewapps.com 媒體核准，再到「工具 → Partners API」。
+2. 金鑰只存本機環境變數或經核准的伺服器 secrets：COUPANG_ACCESS_KEY、COUPANG_SECRET_KEY。不要貼到對話、commit 或前端。
+3. 台灣 Partners Guide 確認 gateway 為 https://api-gateway.tw.coupang.com，POST /v2/providers/affiliate_open_api/apis/openapi/v1/deeplink，HMAC 簽章使用 UTC 時間、方法、路徑、query（不含問號）。使用者已在 Termux 成功取得 rCode=0 與 shortenUrl。
+4. 執行 node scripts/coupang-smoke.mjs --self-test（不連網）；設定金鑰後執行 node scripts/coupang-smoke.mjs，單次 POST 產生測試分潤連結，只輸出狀態，不輸出原始回應或連結。雲端若被拒絕，遵守平台限制，不繞過。
+5. 經人工核對的真實分潤商品可加入 data/products.json：provider: coupang、id、guideSlug、name、description（選填）、affiliateUrl（支援官方 https://coupa.ng/… 及 https://link.tw.coupang.com/a/…）、verifiedOn、approved: true。正式商品含分潤揭露。搜尋結果連結不得冒充特定商品。
+6. Reco API 已確認：POST /v2/providers/affiliate_open_api/apis/openapi/v2/products/reco。執行 node scripts/coupang-reco.mjs --self-test 或設定金鑰後執行 node scripts/coupang-reco.mjs。單次診斷只傳實際網站 domain/page 與 imp 的原生廣告、圖片尺寸及暫定 placementId；不傳 device/user、不呼叫 impressionUrl 或商品連結、不記錄原始資料。回傳商品數量及必要欄位完整數；空結果不等於認證失敗。
+7. Reco 是廣告推薦，未記載 keyword 查詢；正式展示須在真實曝光時依文件呼叫 impressionUrl，並先核對隱私、平台規則、媒體核准、快取期限及 placement/subId 設定。Document 已確認商品搜尋、分類、特價、活動及報表端點；詳細參數及回應 schema 仍需核對。尚未排程、發布真實商品或驗證成交佣金。
+
+8. 商品診斷：node scripts/coupang-products.mjs --self-test；設定金鑰後執行 node scripts/coupang-products.mjs，單次並行查詢 search、hotcategories、goldbox。搜尋暫用 keyword=USB-C&limit=5；參數及回傳欄位以實測和展開的官方 Document 確認。僅輸出狀態、結構與筆數，不保存原始商品資料或開啟追蹤網址。
+9. 官方速率限制：search 50 次/分鐘、reports 500 次/小時、Reco 1000 次/分鐘；goldbox 每日 07:30 更新，報表每日 12:00 更新（時區待確認）。reports/clicks、orders、cancels、commission 及 ads 報表已列於官方文件，日期參數、資料格式、歸因維度尚未提供，暫不呼叫或發布收益。
+
+## 商品型網站預覽（不發布）
+
+- 首頁每日特價（8 筆摘要）、特價完整頁、最多 10 個熱門分類頁、三篇既有指南的關鍵字相關商品。使用真實 API 圖片、價格與追蹤網址，保留分潤揭露及資料更新時間，不把搜尋結果稱為實測。
+- 同步上限：3 個主題搜尋（各 5 筆）及最多 1 次 USB-C fallback、1 次 goldbox、1 次 hotcategories、最多 10 次分類詳情；分類詳情最多並行 3 次，失敗顯示空狀態。不呼叫 impressionUrl、不點擊商品。URL 與必要欄位白名單、去重、關鍵字名稱篩選，仍需人工確認商品與主題相關性。
+- 本地私密預覽（先安全設定環境變數金鑰）：export CATALOG_PREVIEW_FILE="$(mktemp -d)/catalog.json"；npm run catalog:preview；SITE_URL= npm run build；python3 -m http.server 8080 --bind 127.0.0.1 --directory public。預覽快照在 repo 外、限 0600、不覆寫，建置要求資料未超過一小時，預覽伺服器僅應在可信本地環境使用。完成後移除快照目錄，再執行 unset CATALOG_PREVIEW_FILE; npm run build 清除產出。勿提交、上傳或部署預覽檔案。
+- CI 只驗證真實資料渲染與頁面數，未保存或上傳快照、未發布商品、未啟用排程。Cloudflare 正常建置不讀取預覽資料；預覽禁止 SITE_URL，維持 noindex。noindex 不是存取控制，勿部署預覽。正式資料留存/圖片及價格展示條款、媒體核准、報表詳細參數仍待確認。正式管理後台應採存取控制及私有資料庫，不放在公開 Pages 或 repo。

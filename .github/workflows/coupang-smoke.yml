@@ -1,0 +1,43 @@
+name: Coupang Partners API smoke
+on:
+  push:
+    branches: [chatgpt/coupang-provider]
+    paths: ['.github/workflows/coupang-smoke.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Offline checks
+        run: npm run build && npm test
+      - name: One Partners deeplink API probe
+        env:
+          COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
+          COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
+        run: |
+          if [ -z "$COUPANG_ACCESS_KEY" ] || [ -z "$COUPANG_SECRET_KEY" ]; then
+            echo "::error::Missing repository secrets"
+            exit 1
+          fi
+          node scripts/coupang-smoke.mjs
+      - name: One Partners Reco API probe (no impression)
+        env:
+          COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
+          COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
+        run: node scripts/coupang-reco.mjs
+      - name: Product catalog API diagnostics
+        env:
+          COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
+          COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
+        run: node scripts/coupang-products.mjs
+      - name: Real catalog preview and matching verification (no publishing)
+        env:
+          COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
+          COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
+        run: npm run catalog:preview
