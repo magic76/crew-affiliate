@@ -10,7 +10,7 @@ export const GUIDE_QUERIES=Object.freeze({
   'power-bank-capacity':{keyword:'行動電源',match:/行動電源|power bank/i},
   'usb-c-hub-hdmi':{keyword:'USB C 集線器',match:/集線器|擴充基座|hub|多功能轉接/i},
   'kitchen-paper-unit-price':{keyword:'廚房紙巾',match:/廚房紙巾|廚房用紙/i},
-  'detergent-unit-price':{keyword:'洗衣精',match:/(?=.*洗衣精)(?!.*(?:空瓶|洗衣精瓶|洗衣精收納))/i},
+  'detergent-unit-price':{keyword:'洗衣精',match:/^(?!.*(?:空瓶|洗衣精瓶|洗衣精收納))(?=.*洗衣精)/i},
   "charger-safety":{keyword:"充電器",match:/充電器|充電頭|charger/i},
   "extension-cord":{keyword:"延長線",match:/延長線|電源線組/i},
   "travel-plug-adapter":{keyword:"旅行轉接頭",match:/旅行轉接|萬用轉接|轉接插頭|國際轉接/i},
