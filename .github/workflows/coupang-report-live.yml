@@ -1,0 +1,41 @@
+name: Coupang private daily reports
+on:
+  push:
+    branches: [main, chatgpt/coupang-live-reports]
+    paths: ['.github/workflows/coupang-report-live.yml','src/coupang-report.mjs','src/report-ingest.mjs','scripts/coupang-report*.mjs','src/live-catalog.mjs']
+  pull_request:
+    paths: ['.github/workflows/coupang-report-live.yml','src/coupang-report.mjs','src/report-ingest.mjs','scripts/coupang-report*.mjs']
+  workflow_dispatch:
+  schedule:
+    - cron: '15 5 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: coupang-report-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - run: npm run build && npm test && node --check scripts/coupang-report-live.mjs
+  collect:
+    needs: check
+    if: github.repository == 'magic76/crew-affiliate' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - run: node scripts/coupang-report-live.mjs
+        env:
+          COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
+          COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
+          COUPANG_REPORT_SUB_ID: ${{ vars.COUPANG_REPORT_SUB_ID }}
