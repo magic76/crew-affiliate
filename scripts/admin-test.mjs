@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {authorizeAdmin,adminPage} from '../src/admin.mjs';
+const issuer='https://test.cloudflareaccess.com',aud='a'.repeat(64),now=Date.now(),seconds=Math.floor(now/1000);
+const env={ADMIN_ACCESS_ISSUER:issuer,ADMIN_ACCESS_AUD:aud};
+const pair=await crypto.subtle.generateKey({name:'RSASSA-PKCS1-v1_5',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['sign','verify']);
+const key={...await crypto.subtle.exportKey('jwk',pair.publicKey),kid:'test',alg:'RS256'};
+const b64=v=>Buffer.from(JSON.stringify(v)).toString('base64url');
+const jwt=async(overrides={})=>{const prefix=b64({alg:'RS256',kid:'test'})+'.'+b64({iss:issuer,aud:[aud],iat:seconds-1,exp:seconds+60,email:'owner@example.com',...overrides});return prefix+'.'+Buffer.from(await crypto.subtle.sign('RSASSA-PKCS1-v1_5',pair.privateKey,new TextEncoder().encode(prefix))).toString('base64url');};
+const opts={now,fetchImpl:async(url,o)=>{assert.equal(url,issuer+'/cdn-cgi/access/certs');assert.equal(o.redirect,'manual');return Response.json({keys:[key]});}};
+const valid=await jwt();assert(await authorizeAdmin(valid,env,opts));for(const o of [{aud:['b'.repeat(64)]},{iss:'https://evil.example'},{exp:seconds-1},{nbf:seconds+100},{email:''}])assert.equal(await authorizeAdmin(await jwt(o),env,opts),false);
+assert.equal(await authorizeAdmin(valid.slice(0,-8)+'AAAAAAAA',env,opts),false);assert.equal(await authorizeAdmin(valid,env,{...opts,fetchImpl:async()=>new Response(null,{status:302})}),false);
+let reads=0;const privateEnv={...env,CATALOG_KV:{get:async key=>{reads++;return key==='private-gsc-v1'?JSON.stringify({version:1,property:'sc-domain:hicrewapps.com',period:{start:'2026-11-17',end:'2026-11-23'},total:{clicks:1,impressions:20,position:12},daily:[],opportunities:[{query:'<script>alert(1)</script>',clicks:1,impressions:20,position:12}],possiblyTruncated:false}):null;}}};
+const req=new Request('https://hicrewapps.com/admin/');
+assert.equal((await adminPage(req,privateEnv,[],{verify:async()=>false})).status,403);assert.equal(reads,0);
+assert.equal((await adminPage(new Request('https://preview.pages.dev/admin/'),privateEnv,[],{verify:async()=>true})).status,404);assert.equal(reads,0);
+const res=await adminPage(req,privateEnv,[],{verify:async()=>true});assert.equal(res.status,200);assert(res.headers.get('Cache-Control').includes('no-store'));const html=await res.text();assert(html.includes('營運管理'));assert(html.includes('&lt;script&gt;'));assert(!html.includes('<script>alert(1)</script>'));assert(html.includes('未以零值代替'));
+console.log('Admin Access JWT, fail-closed storage and escaping checks passed');
