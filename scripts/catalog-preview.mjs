@@ -1,6 +1,4 @@
-import {writeFile,readFile,mkdtemp,rm} from 'node:fs/promises';
-import {tmpdir} from 'node:os';
-import {join} from 'node:path';
+import {writeFile,readFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {syncCatalog,validateCatalog,normalizeProduct} from '../src/catalog.mjs';
 import {render} from '../src/render.mjs';
