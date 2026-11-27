@@ -3,7 +3,7 @@ const ORIGIN='https://api-gateway.tw.coupang.com';
 export const GUIDE_QUERIES=Object.freeze({
   'usb-c-phone-charger':{keyword:'USB-C 充電器',match:/充電器|充電頭|charger/i},
   'usb-c-cable-60w-100w':{keyword:'USB-C 充電線',match:/充電線|傳輸線|線材|cable/i},
-  'travel-multiport-charger':{keyword:'多孔 充電器',match:/充電器|充電頭|charger/i}
+  'travel-multiport-charger':{keyword:'多孔 充電器',match:/(?=.*(?:充電器|充電頭|charger))(?=.*(?:多孔|雙孔|三孔|四孔|[2345]\s*(?:孔|port)|[234]C[123]?A?))/i}
 });
 const id=v=>(typeof v==='string'||Number.isSafeInteger(v))&&/^[1-9]\d{0,15}$/.test(String(v))?String(v):null;
 const name=v=>typeof v==='string'&&v.trim().length>0&&v.length<=200?v.trim():null;
@@ -61,8 +61,20 @@ export async function syncCatalog({accessKey,secretKey,fetchImpl=fetch,now=new D
     }));
     categoryResults.push(...batch);
   }
-  const guides=Object.fromEntries(Object.entries(GUIDE_QUERIES).map(([slug,g],i)=>[slug,products(rawGuides[i]).filter(p=>g.match.test(p.productName))]));
-  return {version:1,fetchedAt:now.toISOString(),deals,categories:categoryResults,guides};
+  const entries=Object.entries(GUIDE_QUERIES);
+  const guides=Object.fromEntries(entries.map(([slug,g],i)=>[slug,products(rawGuides[i]).filter(p=>g.match.test(p.productName))]));
+  const guideDiagnostics=Object.fromEntries(entries.map(([slug],i)=>[slug,{returned:rawGuides[i].length,usable:products(rawGuides[i]).length,matched:guides[slug].length}]));
+  let fallback=null;
+  if(entries.some(([slug])=>guides[slug].length===0)){
+    // One bounded fallback using the previously verified broad search keyword.
+    try{
+      const rows=await request(PRODUCT_PATHS.search,'keyword=USB-C&limit=5');
+      const usable=products(rows);
+      fallback={returned:rows.length,usable:usable.length};
+      for(const [slug,g] of entries){if(!guides[slug].length)guides[slug]=usable.filter(p=>g.match.test(p.productName));}
+    }catch{fallback={unavailable:true};}
+  }
+  return {version:1,fetchedAt:now.toISOString(),deals,categories:categoryResults,guides,guideDiagnostics,fallback};
 }
 export function validateCatalog(snapshot,now=new Date()){
   const fetched=Date.parse(snapshot?.fetchedAt);
