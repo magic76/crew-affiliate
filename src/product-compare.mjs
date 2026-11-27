@@ -19,7 +19,7 @@ export function compareMarkup(catalog,params,e,note){
  if(missing)html+='<p role="status">部分商品已不在最新快照，請重新選擇。</p>';
  if(selected.length<2)return html+'<p class="search-empty">請選擇至少兩件不同商品。</p></section>';
  const row=(label,cell)=>'<tr><th scope="row">'+label+'</th>'+selected.map(p=>'<td>'+cell(p)+'</td>').join('')+'</tr>';
- html+='<div class="compare-scroll" role="region" tabindex="0" aria-label="商品比較表"><table class="guide-table compare-table"><thead><tr><th scope="col">比較項目</th>'+selected.map((p,i)=>'<th scope="col">商品 '+(i+1)+'<img src="'+e(p.productImage)+'" alt="" width="100" height="100" loading="lazy" referrerpolicy="no-referrer"><span>'+e(p.productName)+'</span></th>').join('')+'</tr></thead><tbody>';
+ html+='<div class="compare-scroll" role="region" tabindex="0" aria-label="商品比較表"><table class="guide-table compare-table"><thead><tr><th scope="col">比較項目</th>'+selected.map((p,i)=>'<th scope="col">商品 '+(i+1)+'<img data-product-image src="'+e(p.productImage)+'" alt="" width="100" height="100" loading="lazy" referrerpolicy="no-referrer"><span>'+e(p.productName)+'</span></th>').join('')+'</tr></thead><tbody>';
  html+=row('目前價格',p=>'<strong>'+e(price(p))+'</strong>'+(p.productPrice===Math.min(...selected.map(x=>x.productPrice))?'<small>所選商品中價格最低</small>':''));
  html+=row('配送',p=>p.isRocket?'火箭配送':'未標示火箭配送');
  html+=row('分類',p=>e(p.categoryName||'未提供'));

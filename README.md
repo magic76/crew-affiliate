@@ -66,3 +66,7 @@ Production-only METRICS_ENABLED=1 and METRICS_DB binding to dedicated D1. Apply 
 ## 商品比較
 
 `/compare/` 支援比較最多三件新鮮快照商品，只顯示 API 已提供的名稱、價格、分類與配送；不推測規格、不以價格判定品質，過期或不存在的商品不顯示。比較結果和參數維持 noindex；不保存使用者選擇、不增加酷澎 API 請求。直接 sponsored 連結保留。
+
+## MVP routing and catalog count
+
+`/affiliate` and supported public subpaths redirect 301 to the canonical root routes, preserving query parameters. Unknown affiliate paths return 404. `/guides/` is a guide directory. Search counts use unique product IDs across current validated deal, category and guide rows. `/api/catalog` exposes the same aggregate counts; no 500-product guarantee. Images retain provider URLs; a local labeled placeholder replaces failed images without retry loops or proxying/storing provider images.

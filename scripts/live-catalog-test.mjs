@@ -40,7 +40,7 @@ assert.equal((await catalogPage(new Request('https://preview.pages.dev/'),env,ne
 assert.equal((await catalogPage(new Request('https://hicrewapps.com/assets/site.css'),env,next,guides,products)).status,404);
 const search=await catalogPage(new Request('https://hicrewapps.com/search/?q=USB-C&max=200'),env,next,guides,products);
 assert.equal(search.status,200);assert((await search.text()).includes('找到 <strong>1</strong> 筆商品'));
-const emptySearch=await catalogPage(new Request('https://hicrewapps.com/search/index.html?max=10'),env,next,guides,products);
+const emptySearch=await catalogPage(new Request('https://hicrewapps.com/search/?max=10'),env,next,guides,products);
 assert((await emptySearch.text()).includes('沒有符合條件的商品'));
 const saved=data.get(KEY);
 data.clear();
@@ -76,3 +76,8 @@ console.log('SEO allowlist, canonical, sitemap and fallback checks passed');
 
 
 const affiliate=await catalogPage(new Request('https://hicrewapps.com/affiliate?x=1'),seo,next,guides,products);assert.equal(affiliate.status,301);assert.equal(affiliate.headers.get('Location'),'https://hicrewapps.com/?x=1');
+
+for(const [input,target] of [['/affiliate/','/'],['/affiliate/guides/','/guides/'],['/affiliate/guides/usb-c-phone-charger/index.html','/guides/usb-c-phone-charger/'],['/affiliate/compare','/compare/'],['/affiliate/search?q=USB-C','/search/?q=USB-C'],['/affiliate/tools/','/tools/'],['/affiliate/unit-price','/unit-price/'],['/compare','/compare/'],['/search/index.html?max=10','/search/?max=10'],['/guides','/guides/']]){const res=await catalogPage(new Request('https://hicrewapps.com'+input),seo,next,guides,products);assert.equal(res.status,301,input);assert.equal(res.headers.get('Location'),'https://hicrewapps.com'+target,input);}
+for(const path of ['/affiliate/unknown','/affiliate/guides/not-existing','/affiliate//evil.example','/affiliate/api/catalog'])assert.equal((await catalogPage(new Request('https://hicrewapps.com'+path),seo,next,guides,products)).status,404,path);
+const guideIndex=await catalogPage(new Request('https://hicrewapps.com/guides/'),seo,next,guides,products);assert.equal(guideIndex.status,200);assert((await guideIndex.text()).includes('全部選購指南'));
+assert.equal(status.counts.uniqueProducts, status.counts.sourceRows-status.counts.duplicateRows);console.log('MVP alias and counts checks passed');
