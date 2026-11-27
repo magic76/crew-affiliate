@@ -17,7 +17,7 @@ const bytes=s=>{
 };
 const parse=s=>JSON.parse(new TextDecoder().decode(bytes(s)));
 const numericDate=value=>Number.isSafeInteger(value)?value:(typeof value==='string'&&/^\d{1,12}$/.test(value)?Number(value):null);
-export async function checkIdentity(token,{fetchImpl=fetch,now=Date.now()}={}){
+export async function checkIdentity(token,{fetchImpl=fetch,now=Date.now(),purpose='catalog'}={}){
   let stage='format';
   try{
     if(typeof token!=='string'||token.length>16000)return stage;
@@ -27,7 +27,9 @@ export async function checkIdentity(token,{fetchImpl=fetch,now=Date.now()}={}){
     const seconds=Math.floor(now/1000);
     if(header.alg!=='RS256'||typeof header.kid!=='string'||!header.kid.length||header.kid.length>200)return stage;
     stage='claims';
-    if(claims.iss!==ISSUER||claims.aud!==AUDIENCE||claims.repository!=='magic76/crew-affiliate'||String(claims.repository_id)!==REPO_ID||claims.ref!=='refs/heads/main'||claims.workflow_ref!==WORKFLOW||(typeof claims.sub!=='string'||!claims.sub.length)||!['push','schedule','workflow_dispatch'].includes(claims.event_name))return stage;
+    const policies={catalog:{aud:AUDIENCE,repo:'magic76/crew-affiliate',id:REPO_ID,workflow:WORKFLOW},report:{aud:'https://hicrewapps.com/api/private-report',repo:'magic76/crew-affiliate',id:REPO_ID,workflow:'magic76/crew-affiliate/.github/workflows/coupang-report-live.yml@refs/heads/main'}};
+    const policy=policies[purpose];if(!policy)return stage;
+    if(claims.iss!==ISSUER||claims.aud!==policy.aud||claims.repository!==policy.repo||String(claims.repository_id)!==policy.id||claims.ref!=='refs/heads/main'||claims.workflow_ref!==policy.workflow||(typeof claims.sub!=='string'||!claims.sub.length)||!['push','schedule','workflow_dispatch'].includes(claims.event_name))return stage;
     stage='time';
     const exp=numericDate(claims.exp),iat=numericDate(claims.iat),nbf=claims.nbf===undefined?iat:numericDate(claims.nbf);
     // Reject expired, future and old tokens even if GitHub issues a longer-lived credential.

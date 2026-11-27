@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "node scripts/check.mjs && node scripts/coupang-smoke.mjs --self-test && node scripts/coupang-reco.mjs --self-test && node scripts/coupang-products.mjs --self-test && node scripts/catalog-preview.mjs --self-test && node scripts/live-catalog-test.mjs && node scripts/catalog-readback-test.mjs && node scripts/catalog-search-test.mjs && node scripts/editorial-check.mjs && node scripts/metrics-test.mjs && node scripts/product-compare-test.mjs && node scripts/unit-price-test.mjs && node scripts/image-fallback-test.mjs && node --check src/unit-price-client.js && node --check src/metrics-client.js && node --check scripts/catalog-publish.mjs",
+    "test": "node scripts/check.mjs && node scripts/coupang-smoke.mjs --self-test && node scripts/coupang-reco.mjs --self-test && node scripts/coupang-products.mjs --self-test && node scripts/catalog-preview.mjs --self-test && node scripts/live-catalog-test.mjs && node scripts/catalog-readback-test.mjs && node scripts/catalog-search-test.mjs && node scripts/editorial-check.mjs && node scripts/metrics-test.mjs && node scripts/product-compare-test.mjs && node scripts/unit-price-test.mjs && node scripts/image-fallback-test.mjs && node scripts/coupang-report-test.mjs && node scripts/private-report-test.mjs && node scripts/editorial-draft-test.mjs && node --check src/unit-price-client.js && node --check src/metrics-client.js && node --check scripts/catalog-publish.mjs",
     "catalog:preview": "node scripts/catalog-preview.mjs",
     "preview": "python3 -m http.server 8080 --directory public"
   }

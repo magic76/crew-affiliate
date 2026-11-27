@@ -1,3 +1,4 @@
+import {isReportRequest} from '../src/coupang-report.mjs';
 import {createHmac} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import assert from 'node:assert/strict';
@@ -12,7 +13,7 @@ export function sign({accessKey,secretKey,method='POST',path=PATH,query='',now=n
   if(!accessKey||!secretKey||!/^[A-Za-z0-9_-]+$/.test(accessKey)) throw new Error('Missing or invalid API credentials');
   const post=method==='POST'&&[PATH,RECO_PATH].includes(path)&&query==='';
   const get=method==='GET'&&(Object.values(PRODUCT_PATHS).includes(path)||/^\/v2\/providers\/affiliate_open_api\/apis\/openapi\/v1\/products\/(?:hotcategories|bestcategories)\/[1-9]\d{0,15}$/.test(path))&&(path===PRODUCT_PATHS.search?/^keyword=[A-Za-z0-9%+_.~-]+&limit=(?:[1-5]|10)$/.test(query):query==='');
-  if(!post&&!get) throw new Error('Only approved Taiwan Partners diagnostic requests are allowed');
+  if(!post&&!get&&!(method==='GET'&&isReportRequest(path,query))) throw new Error('Only approved Taiwan Partners diagnostic requests are allowed');
   const signedDate=now.toISOString().replace(/[-:]/g,'').slice(2,15)+'Z';
   const signature=createHmac('sha256',secretKey).update(signedDate+method+path+query).digest('hex');
   return 'CEA algorithm=HmacSHA256, access-key='+accessKey+', signed-date='+signedDate+', signature='+signature;
