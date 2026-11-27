@@ -21,3 +21,10 @@ export function searchCatalog(catalog,filters){
  if(filters.sort!=='default')results.sort((a,b)=>filters.sort==='price-asc'?a.productPrice-b.productPrice:b.productPrice-a.productPrice);
  return results;
 }
+
+// Count validated source occurrences separately from the actual unique searchable pool.
+export function catalogCounts(catalog){
+ if(!catalog)return {deals:0,categoryProducts:0,guideProducts:0,sourceRows:0,uniqueProducts:0,duplicateRows:0};
+ const deals=catalog.deals.length,categoryProducts=catalog.categories.reduce((n,c)=>n+c.products.length,0),guideProducts=Object.values(catalog.guides).reduce((n,rows)=>n+rows.length,0),sourceRows=deals+categoryProducts+guideProducts,uniqueProducts=searchCatalog(catalog,parseFilters()).length;
+ return {deals,categoryProducts,guideProducts,sourceRows,uniqueProducts,duplicateRows:sourceRows-uniqueProducts};
+}

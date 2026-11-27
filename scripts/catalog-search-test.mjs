@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {parseFilters,searchCatalog} from '../src/catalog-search.mjs';
+import {parseFilters,searchCatalog,catalogCounts} from '../src/catalog-search.mjs';
 import {validateCatalog} from '../src/catalog-model.mjs';
 import {render} from '../src/render.mjs';
 const product=(id,name,price,rocket=false)=>({productId:id,productName:name,productPrice:price,isRocket:rocket,productImage:'https://t2c.coupangcdn.com/test.png',productUrl:'https://coupa.ng/test',categoryName:'電子配件'});
@@ -27,3 +27,5 @@ const evil=render(guides,[],'',snapshot,new URLSearchParams('q='+encodeURICompon
 assert(!evil.includes('<script>alert(1)</script>'));
 assert(render(guides,[],'',snapshot,new URLSearchParams('min=500&max=10'))['search/index.html'].includes('最低價格不能高於最高價格'));
 console.log('Shopping discovery tests passed');
+
+assert.deepEqual(catalogCounts(catalog),{deals:2,categoryProducts:2,guideProducts:1,sourceRows:5,uniqueProducts:3,duplicateRows:2});assert(pages['search/index.html'].includes('全站 3 件不重複商品'));assert(pages['search/index.html'].includes('data-product-image'));assert(pages['search/index.html'].includes('assets/product-image.js'));console.log('Catalog count checks passed');
