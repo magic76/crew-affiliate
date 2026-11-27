@@ -113,7 +113,7 @@ export async function catalogPage(request,env,next,guides,products){
   if(eligible&&url.pathname!==canonicalPath(key)){url.pathname=canonicalPath(key);return Response.redirect(url.href,301);}
   const current=await readCatalog(env);
   if(!current&&!eligible&&key!=='search/index.html')return next();
-  const html=render(guides,products,base,current,url.searchParams,{production:true})[key];
+  const html=render(guides,products,base,current,url.searchParams,{production:true,metricsEnabled:env.METRICS_ENABLED==='1'&&!!env.METRICS_DB})[key];
   if(!html)return next();
   return new Response(request.method==='HEAD'?null:html,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','X-Robots-Tag':eligible?'index, follow':'noindex, follow','Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff'}});
 }

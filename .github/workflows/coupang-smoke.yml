@@ -1,7 +1,7 @@
 name: Coupang Partners API smoke
 on:
   push:
-    branches: [chatgpt/guide-conversion]
+    branches: [chatgpt/affiliate-click-metrics]
     paths: ['.github/workflows/coupang-smoke.yml']
   workflow_dispatch:
 permissions:

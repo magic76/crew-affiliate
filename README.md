@@ -54,3 +54,7 @@ SEO_INDEX_ENABLED=1（僅 Cloudflare production）時，hicrewapps.com 的首頁
 ## 選購指南轉換版型
 
 既有三篇文章保留網址及索引政策，新增購買意圖標題、快速結論、商品價格比較、使用情境表及 FAQ。商品依 API 當前價格排序，不推測未提供的瓦數、插孔或協議，不宣稱實測或最低價。
+
+## First-party conversion metrics
+
+Production-only METRICS_ENABLED=1 and METRICS_DB binding to dedicated D1. Apply migrations/001_metrics.sql before enabling. Counts are browser pageviews and observed trusted sponsored-link activations, grouped by Taipei date, known page bucket, event and platform. No personal IDs, cookies, IP, user agent, search query, price or product URL are stored by the metrics code. GPC/DNT honored. Category pages grouped; no arbitrary paths. POST only, same-origin browser headers, bounded payload. Counts are directional and may be affected by bots, blocking, repeat visits or spoofed requests, not unique visitors or settled orders. No automatic click, affiliate redirects or external URL requests. D1 usage limits apply; failures do not prevent shopping. Reports are private via Cloudflare authenticated access; no public read endpoint. Disable flag and redeploy to stop collection.

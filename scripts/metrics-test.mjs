@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {recordMetric,pageBucket} from '../src/metrics.mjs';
+const guides=[{slug:'usb-c-phone-charger'}],origin='https://hicrewapps.com',now=new Date('2026-11-27T17:00:00Z');
+const writes=[];const env={METRICS_ENABLED:'1',METRICS_DB:{prepare(sql){assert(sql.includes('ON CONFLICT'));return{bind(...args){writes.push(args);return{run:async()=>({success:true})};}};}}};
+const req=(data,headers={},url=origin+'/api/metrics')=>new Request(url,{method:'POST',headers:{Origin:origin,'Sec-Fetch-Site':'same-origin','Content-Type':'application/json',...headers},body:JSON.stringify(data)});
+const event={page:'/guides/usb-c-phone-charger/index.html',event:'affiliate_click',provider:'coupang'};
+assert.equal((await recordMetric(req(event),env,guides,now)).status,204);
+assert.deepEqual(writes,[['2026-11-28','/guides/usb-c-phone-charger/','affiliate_click','coupang']]);
+assert.equal((await recordMetric(req({...event,page:'/categories/123/',event:'pageview',provider:''}),env,guides,now)).status,204);
+assert.equal(writes[1][1],'/categories/');
+assert.equal(pageBucket('/index.html',guides),'/');
+assert.equal(pageBucket('/guides/not-existing/',guides),null);
+for(const [request,status] of [[req(event,{Origin:'https://other.example'}),403],[req(event,{'Sec-Fetch-Site':'cross-site'}),403],[req(event,{'Sec-GPC':'1'}),204],[req(event,{DNT:'1'}),204],[req({...event,page:'/search/?q=private'}),400],[req({...event,provider:'unknown'}),400],[req({...event,productId:'1'}),400],[req({...event,page:'a'.repeat(600)}),413],[new Request(origin+'/api/metrics'),405],[req(event,{},'https://preview.pages.dev/api/metrics'),404]])assert.equal((await recordMetric(request,env,guides,now)).status,status);
+assert.equal(writes.length,2);
+assert.equal((await recordMetric(req(event),{},guides)).status,503);
+assert.equal((await recordMetric(req(event),{...env,METRICS_DB:{prepare(){throw Error('quota');}}},guides)).status,503);
+console.log('Aggregate metrics privacy and validation checks passed');
