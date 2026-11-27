@@ -46,3 +46,7 @@ Cloudflare Pages Functions + KV: CATALOG_KV 綁定只在 production，CATALOG_PU
 ## 商品探索
 
 首頁導向商品探索、每日特價、熱門分類與指南。搜尋使用已驗證且未過期的本站商品快照，支援關鍵字、分類、最低/最高價格、火箭配送與價格排序；跨來源以商品 ID 去重。不直接呼叫酷澎搜尋 API、不存使用者搜尋歷史、不宣稱全站搜尋。商品資料過期顯示暫未同步；正式站繼續 noindex。
+
+## SEO 正式索引開關
+
+SEO_INDEX_ENABLED=1（僅 Cloudflare production）時，hicrewapps.com 的首頁、關於、功率工具及三篇已列名的指南允許索引。src/seo.mjs 明確列出允許頁面；新指南預設 noindex，審閱後才加入。搜尋、特價列表、分類商品頁、API 與 preview 均不開放索引。正式 robots.txt 宣告 sitemap，僅列允許頁面，以 trailing slash URL 為 canonical，舊 index.html URL 301 轉址。商品快照失效不影響內容頁的索引。將 SEO_INDEX_ENABLED 設為 0 並重新部署可停用索引。索引允許不等於 Google 已收錄；需另外在 Search Console 驗證網站並提交 sitemap。

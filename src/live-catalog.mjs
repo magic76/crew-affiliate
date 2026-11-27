@@ -1,3 +1,4 @@
+import {indexable,canonicalPath} from './seo.mjs';
 import {validateCatalog} from './catalog-model.mjs';
 import {render} from './render.mjs';
 export const KEY='catalog-v1';
@@ -94,17 +95,25 @@ export async function catalogApi(request,env,{verify=checkIdentity}={}){
 function route(path){
   if(path==='/'||path==='/index.html'||path==='/index')return 'index.html';
   const clean=path.replace(/\/(?:index(?:\.html)?)$/,'/').replace(/\/$/,'');
-  if(/^\/(?:search|deals|categories\/[1-9]\d{0,15}|guides\/[a-z0-9-]+)$/.test(clean))return clean.slice(1)+'/index.html';
+  if(/^\/(?:tools|about|search|deals|categories\/[1-9]\d{0,15}|guides\/[a-z0-9-]+)$/.test(clean))return clean.slice(1)+'/index.html';
   return null;
 }
 export async function catalogPage(request,env,next,guides,products){
   const url=new URL(request.url);
   if(url.hostname!==HOST||!['GET','HEAD'].includes(request.method))return next();
+  const base=env.SEO_INDEX_ENABLED==='1'?'https://'+HOST:'';
   const key=route(url.pathname);
+  if(url.pathname==='/robots.txt'||url.pathname==='/sitemap.xml'){
+    const body=render(guides,products,base)[url.pathname.slice(1)];
+    if(body===undefined)return new Response('Not found',{status:404});
+    return new Response(request.method==='HEAD'?null:body,{headers:{'Content-Type':url.pathname.endsWith('.xml')?'application/xml; charset=utf-8':'text/plain; charset=utf-8','Cache-Control':'no-store'}});
+  }
   if(!key)return next();
+  const eligible=!!base&&indexable(key);
+  if(eligible&&url.pathname!==canonicalPath(key)){url.pathname=canonicalPath(key);return Response.redirect(url.href,301);}
   const current=await readCatalog(env);
-  if(!current&&key!=='search/index.html')return next();
-  const html=render(guides,products,'',current,url.searchParams)[key];
+  if(!current&&!eligible&&key!=='search/index.html')return next();
+  const html=render(guides,products,base,current,url.searchParams,{production:true})[key];
   if(!html)return next();
-  return new Response(request.method==='HEAD'?null:html,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','X-Robots-Tag':'noindex, follow','Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff'}});
+  return new Response(request.method==='HEAD'?null:html,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','X-Robots-Tag':eligible?'index, follow':'noindex, follow','Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff'}});
 }
