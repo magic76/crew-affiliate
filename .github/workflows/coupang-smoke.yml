@@ -1,7 +1,7 @@
 name: Coupang Partners API smoke
 on:
   push:
-    branches: [chatgpt/coupang-provider]
+    branches: [chatgpt/catalog-search-normalization]
     paths: ['.github/workflows/coupang-smoke.yml']
   workflow_dispatch:
 permissions:
@@ -16,6 +16,11 @@ jobs:
           persist-credentials: false
       - name: Offline checks
         run: npm run build && npm test
+      - name: Search response shape diagnostic
+        env:
+          COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
+          COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
+        run: node scripts/catalog-search-shape.mjs
       - name: One Partners deeplink API probe
         env:
           COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
