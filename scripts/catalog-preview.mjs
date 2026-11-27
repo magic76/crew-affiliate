@@ -39,6 +39,9 @@ if(process.argv.includes('--self-test')){
   assert.equal(snapshot.guides['usb-c-phone-charger'].length,1);
   assert.equal(normalizeProduct({...fixture,productUrl:'https://link.tw.coupang.com.evil.invalid/x'}),null);
   assert.equal(normalizeProduct({...fixture,productImage:'https://evil.invalid/x'}),null);
+  assert(normalizeProduct({...fixture,productImage:'https://ads-partners.tw.coupang.com/image/test.png',productUrl:'https://coupang.onelink.me/test?pid=test'}));
+  assert.equal(normalizeProduct({...fixture,productImage:'https://ads-partners.tw.coupang.com.evil.invalid/image.png'}),null);
+  assert.equal(normalizeProduct({...fixture,productImage:'https://other.tw.coupang.com/image.png'}),null);
   assert.throws(()=>validateCatalog({...snapshot,fetchedAt:'2000-01-01T00:00:00Z'}));
   const bad={...snapshot,deals:[{...fixture,productName:'<script>alert(1)</script>'}]};
   const guides=JSON.parse(await readFile('data/guides.json','utf8'));
