@@ -1,9 +1,9 @@
 name: Private ingestion checks
 on:
   push:
-    branches: [chatgpt/gsc-gemini-live]
+    branches: [chatgpt/editorial-schema-retry]
   pull_request:
-    paths: ['src/private-ingest.mjs','src/live-catalog.mjs','scripts/private-ingest-test.mjs','scripts/editorial-live.mjs','functions/api/private-*.js','.github/workflows/private-ingest-check.yml']
+    paths: ['src/private-ingest.mjs','src/editorial-draft.mjs','src/live-catalog.mjs','scripts/private-ingest-test.mjs','scripts/editorial-live.mjs','functions/api/private-*.js','.github/workflows/private-ingest-check.yml']
 permissions:
   contents: read
 jobs:
