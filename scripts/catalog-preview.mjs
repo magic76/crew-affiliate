@@ -20,7 +20,7 @@ async function verify(snapshot){
       const target=m[1].split(/[?#]/)[0];
       if(!target||target.startsWith('https:'))continue;
       const resolved=new URL(target,'https://preview.invalid/'+path).pathname.slice(1);
-      assert(resolved==='assets/site.css'||Object.hasOwn(files,resolved),'Broken preview link');
+      assert(['assets/site.css','assets/unit-price.js'].includes(resolved)||Object.hasOwn(files,resolved),'Broken preview link');
     }
   }
   assert.throws(()=>render(guides,products,'https://hicrewapps.com',snapshot));

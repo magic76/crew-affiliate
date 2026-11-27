@@ -1,0 +1,10 @@
+export function unitPrice(price,shipping,packs,quantity,scale=1){
+ const values=[price,shipping,packs,quantity,scale];
+ if(!values.every(Number.isFinite)||price<0||shipping<0||packs<=0||quantity<=0||scale<=0||!Number.isInteger(packs))return null;
+ const total=price+shipping,amount=packs*quantity,per=total/amount*scale;
+ return Number.isFinite(per)&&Number.isFinite(amount)?{total,amount,per}:null;
+}
+export const MODES=Object.freeze({tissue:['每抽','抽',1],diaper:['每片','片',1],liquid:['每100毫升','毫升',100],weight:['每100公克','公克',100],sheet:['每張','張',1]});
+export function unitMarkup(){
+ return '<article><a class="back" href="../index.html">← 首頁</a><span class="eyebrow">免費省錢工具</span><h1>單位價格計算器：衛生紙、尿布、洗衣精比價</h1><p class="lead">比較兩組包裝的含運單位成本，不必靠大包裝或折扣字樣猜測哪個便宜。</p><form id="unit-price"><label>比較單位 <select name="mode"><option value="tissue">衛生紙（每抽）</option><option value="diaper">尿布（每片）</option><option value="liquid">洗衣精等（每100毫升）</option><option value="weight">重量（每100公克）</option><option value="sheet">紙巾（每張）</option></select></label><div class="unit-grid">'+['A','B'].map((id,i)=>'<fieldset><legend>商品 '+id+'</legend><label>商品總價（元）<input name="'+id+'price" type="number" min="0" max="10000000" step="0.01" required value="'+(i?299:199)+'"></label><label>運費（元）<input name="'+id+'shipping" type="number" min="0" max="100000" step="0.01" required value="0"></label><label>包數／瓶數<input name="'+id+'packs" type="number" min="1" max="100000" step="1" required value="'+(i?12:8)+'"></label><label>每包數量（<span data-unit>抽</span>）<input name="'+id+'quantity" type="number" min="0.01" max="1000000" step="0.01" required value="100"></label><output id="unit-'+id+'"></output></fieldset>').join('')+'</div><p class="note">預設數字只供試算，不是即時商品報價。</p><button class="primary" type="submit">比較單位價格</button><p id="unit-result" class="check" role="status" aria-live="polite">請輸入價格與數量。</p></form><h2>比較前先確認</h2><p>衛生紙的抽數與張數不能混用；尿布需同尺寸與類型；洗衣精的重量和容量不能直接互換，濃縮配方還需核對每次用量。運費、折價券及實際付款金額請依你的訂單填寫。</p><a class="primary" href="../search/index.html">查看目前商品 →</a></article><script type="module" src="../assets/unit-price.js"></script>';
+}

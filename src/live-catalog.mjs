@@ -95,12 +95,13 @@ export async function catalogApi(request,env,{verify=checkIdentity}={}){
 function route(path){
   if(path==='/'||path==='/index.html'||path==='/index')return 'index.html';
   const clean=path.replace(/\/(?:index(?:\.html)?)$/,'/').replace(/\/$/,'');
-  if(/^\/(?:tools|about|search|compare|deals|categories\/[1-9]\d{0,15}|guides\/[a-z0-9-]+)$/.test(clean))return clean.slice(1)+'/index.html';
+  if(/^\/(?:unit-price|tools|about|search|compare|deals|categories\/[1-9]\d{0,15}|guides\/[a-z0-9-]+)$/.test(clean))return clean.slice(1)+'/index.html';
   return null;
 }
 export async function catalogPage(request,env,next,guides,products){
   const url=new URL(request.url);
   if(url.hostname!==HOST||!['GET','HEAD'].includes(request.method))return next();
+  if(/^\/affiliate(?:\/(?:index(?:\.html)?)?)?$/.test(url.pathname)){url.pathname='/';return Response.redirect(url.href,301);}
   const base=env.SEO_INDEX_ENABLED==='1'?'https://'+HOST:'';
   const key=route(url.pathname);
   if(url.pathname==='/robots.txt'||url.pathname==='/sitemap.xml'){
