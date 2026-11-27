@@ -33,7 +33,7 @@
           "type": "manufacturer-or-authority"
         }
       ],
-      "status": "candidate",
+      "status": "published",
       "searchVolume": null,
       "competition": null,
       "researchedOn": "2026-11-27"
@@ -177,7 +177,7 @@
           "type": "existing-search-result"
         }
       ],
-      "status": "candidate",
+      "status": "published",
       "searchVolume": null,
       "competition": null,
       "researchedOn": "2026-11-27"
@@ -214,6 +214,50 @@
         }
       ],
       "status": "candidate",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "power-bank-capacity",
+      "keyword": "行動電源 選購",
+      "cluster": "3C",
+      "intent": 3,
+      "fit": 3,
+      "angle": "比較行動電源的額定容量、輸出功率、重量與補充電力需求，不把電芯標示容量直接當成手機可用電量。",
+      "evidence": [
+        {
+          "url": "https://www.bsmi.gov.tw/wSite/ct?ctNode=8745&mp=1&xItem=125448",
+          "type": "manufacturer-or-authority"
+        },
+        {
+          "url": "https://www.bsmi.gov.tw/wSite/fp?ctNode=8205&xItem=84797",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "usb-c-hub-hdmi",
+      "keyword": "USB C 集線器 選購",
+      "cluster": "3C",
+      "intent": 3,
+      "fit": 3,
+      "angle": "先確認裝置USB-C埠能否輸出影像，再比較HDMI解析度、USB速度、供電與插孔組合。",
+      "evidence": [
+        {
+          "url": "https://support.apple.com/zh-tw/119850",
+          "type": "manufacturer-or-authority"
+        },
+        {
+          "url": "https://support.apple.com/zh-tw/102477",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "published",
       "searchVolume": null,
       "competition": null,
       "researchedOn": "2026-11-27"

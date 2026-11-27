@@ -34,7 +34,7 @@ if(process.argv.includes('--self-test')){
     const rows=u.pathname.endsWith('/hotcategories')?[{categoryId:1,categoryName:'充電配件'}]:[fixture,fixture];
     return {ok:true,status:200,json:async()=>({rCode:'0',data:u.pathname.endsWith('/search')?{productData:rows}:rows})};
   }});
-  assert.equal(calls.length,10);
+  assert.equal(calls.length,14);
   assert.equal(snapshot.deals.length,1);
   assert.equal(snapshot.categories[0].products.length,1);
   assert.equal(snapshot.guides['usb-c-phone-charger'].length,1);
