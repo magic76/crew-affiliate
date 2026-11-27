@@ -13,7 +13,7 @@ function safeUrl(value,kind){
     const u=new URL(value);
     if(u.protocol!=='https:'||u.username||u.password||u.port)return null;
     const host=u.hostname;
-    const valid=kind==='image'?(host==='coupangcdn.com'||host.endsWith('.coupangcdn.com')):['coupa.ng','link.tw.coupang.com','coupang.onelink.me'].includes(host);
+    const valid=kind==='image'?(host==='ads-partners.tw.coupang.com'||host==='coupangcdn.com'||host.endsWith('.coupangcdn.com')):['coupa.ng','link.tw.coupang.com','coupang.onelink.me'].includes(host);
     return valid?u.href:null;
   }catch{return null;}
 }
