@@ -4,11 +4,12 @@ import assert from 'node:assert/strict';
 
 const ORIGIN='https://api-gateway.tw.coupang.com';
 const PATH='/v2/providers/affiliate_open_api/apis/openapi/v1/deeplink';
+export const RECO_PATH='/v2/providers/affiliate_open_api/apis/openapi/v2/products/reco';
 const TEST_URL='https://www.tw.coupang.com/search?component=&q=USB-C&channel=user';
 // Taiwan Partners Guide: timestamp + method + path + query (without ?).
 export function sign({accessKey,secretKey,method='POST',path=PATH,query='',now=new Date()}) {
   if(!accessKey||!secretKey||!/^[A-Za-z0-9_-]+$/.test(accessKey)) throw new Error('Missing or invalid API credentials');
-  if(path!==PATH||method!=='POST'||query!=='') throw new Error('Only documented deeplink probe is allowed');
+  if(![PATH,RECO_PATH].includes(path)||method!=='POST'||query!=='') throw new Error('Only documented Taiwan Partners POST paths are allowed');
   const signedDate=now.toISOString().replace(/[-:]/g,'').slice(2,15)+'Z';
   const signature=createHmac('sha256',secretKey).update(signedDate+method+path+query).digest('hex');
   return 'CEA algorithm=HmacSHA256, access-key='+accessKey+', signed-date='+signedDate+', signature='+signature;
