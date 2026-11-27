@@ -15,7 +15,7 @@ export async function verifyPublished(snapshot,{fetchImpl=fetch,delayImpl=ms=>ne
         for(let i=0;i<expected.length;i+=5)pages.push(...await Promise.all(expected.slice(i,i+5).map(async ([path,marker])=>{
           const response=await fetchImpl(origin+path,{redirect:'error',signal:AbortSignal.timeout(10000),headers:{'Cache-Control':'no-cache'}});
           const html=await response.text();
-          return response.ok&&html.includes(marker)&&html.includes('rel="sponsored nofollow noopener noreferrer"')&&html.includes('catalog-card')&&html.includes('NT
+          return response.ok&&html.includes(marker)&&html.includes('rel="sponsored nofollow noopener noreferrer"')&&html.includes('catalog-card')&&html.includes('NT$')&&(!path.startsWith('/guides/')||(html.includes('data-product-image')&&html.includes('assets/product-image.js')));
         })));
         if(pages.every(Boolean))return expected.length;
         console.warn(JSON.stringify({readbackMissing:expected.filter((_,i)=>!pages[i]).map(([path])=>path)}));
