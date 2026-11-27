@@ -5,7 +5,7 @@ export function pageBucket(path,guides){
  if(typeof path!=='string'||path.length>180)return null;
  const clean=path.replace(/\/index(?:\.html)?$/,'/').replace(/\/$/,'')||'/';
  if(clean==='/index'||clean==='/index.html'||clean==='/')return '/';
- if(['/tools','/about','/search','/deals'].includes(clean))return clean+'/';
+ if(['/tools','/about','/search','/compare','/deals'].includes(clean))return clean+'/';
  if(/^\/categories\/[1-9]\d{0,15}$/.test(clean))return '/categories/';
  if(guides.some(g=>clean==='/guides/'+g.slug))return clean+'/';
  return null;
