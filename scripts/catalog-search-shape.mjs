@@ -20,6 +20,6 @@ try{
     id:counts(rows,p=>Number.isSafeInteger(p.productId)?'safe-number':typeof p.productId==='string'?'string':'other'),
     name:counts(rows,p=>typeof p.productName!=='string'?'missing':!p.productName.trim()?'empty':p.productName.length>200?'over-200':'valid'),
     price:counts(rows,p=>Number.isFinite(p.productPrice)&&p.productPrice>=0?'valid':typeof p.productPrice),
-    image:counts(rows,p=>classify(p.productImage)),link:counts(rows,p=>classify(p.productUrl))};
+    image:counts(rows,p=>classify(p.productImage)),imageHosts:counts(rows,p=>{try{const h=new URL(p.productImage).hostname;return /^[a-z][a-z0-9-]{0,30}\.tw\.coupang\.com$/.test(h)?h:'other';}catch{return 'invalid';}}),link:counts(rows,p=>classify(p.productUrl))};
   console.log(JSON.stringify(report));
 }catch{console.error('Search shape probe failed');process.exitCode=1;}
