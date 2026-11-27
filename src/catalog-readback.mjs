@@ -25,12 +25,3 @@ export async function verifyPublished(snapshot,{fetchImpl=fetch,delayImpl=ms=>ne
   }
   throw Error('Public page verification failed');
 }
-)&&(!path.startsWith('/guides/')||(html.includes('data-product-image')&&html.includes('assets/product-image.js')));
-        }));
-        if(pages.every(Boolean))return expected.length;
-      }
-    }catch{}
-    if(attempt+1<attempts)await delayImpl(10000);
-  }
-  throw Error('Public page verification failed');
-}
