@@ -16,7 +16,7 @@ jobs:
           persist-credentials: false
       - name: Offline checks
         run: npm run build && npm test
-      - name: Search response shape diagnostic
+      - name: Search response image-host diagnostic
         env:
           COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
           COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
