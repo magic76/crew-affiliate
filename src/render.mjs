@@ -1,4 +1,4 @@
-import {validateCatalog} from './catalog.mjs';
+import {validateCatalog} from './catalog-model.mjs';
 export function render(guides,products,base="",snapshot=null){
  const catalog=snapshot?validateCatalog(snapshot):null;
  if(catalog&&base)throw Error("Catalog preview must remain noindex; publication is not enabled");
