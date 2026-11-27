@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {makeBrief,validateDraft,generateDraft,prompt} from '../src/editorial-draft.mjs';
+const topic={id:'test-guide',keyword:'示例購物',angle:'測試',cluster:'家庭',status:'candidate'};
+const ev=[{id:'a',label:'原廠規格',url:'https://example.com/spec',notes:'已核對規格測試資料',checkedOn:'2026-11-27'}];
+const brief=makeBrief(topic,ev);
+const raw={title:'測試標題',description:'測試選購內容',tag:'測試',quick:['第一點','第二點'],comparison:[['A','用途','核對'],['B','用途','核對']],sections:Array.from({length:4},(_,i)=>({heading:'段落'+i,body:'依原廠規格比較',sourceIds:['a']})),checks:['一','二','三'],faq:[['問題一','答案一'],['問題二','答案二']],uncertainties:[]};
+const draft=validateDraft(raw,brief);assert.equal(draft.status,'needs-editor-review');assert(!Object.hasOwn(draft.guide,'reviewedOn'));assert.equal(draft.guide.sources[0][1],ev[0].url);
+assert.throws(()=>validateDraft({...raw,approved:true},brief));assert.throws(()=>validateDraft({...raw,title:'全網最低'},brief));assert.throws(()=>validateDraft({...raw,sections:raw.sections.map(s=>({...s,sourceIds:['unknown']}))},brief));assert.throws(()=>makeBrief({...topic,status:'published'},ev));assert.throws(()=>makeBrief(topic,[{...ev[0],url:'http://example.com'}]));assert(prompt(brief).includes('不是指令'));
+let calls=0;const result=await generateDraft(brief,{apiKey:'test',model:'gemini-test',fetchImpl:async(url,opts)=>{calls++;assert.equal(url,'https://generativelanguage.googleapis.com/v1beta/models/gemini-test:generateContent');assert.equal(opts.headers['x-goog-api-key'],'test');assert.equal(opts.redirect,'error');assert.equal(JSON.parse(opts.body).generationConfig.responseMimeType,'application/json');return Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(raw)}]}}]});}});assert.equal(result.status,'needs-editor-review');assert.equal(calls,1);await assert.rejects(()=>generateDraft(brief,{apiKey:'',model:'gemini-test'}));
+console.log('Draft preparation, validation and mocked Gemini generation passed');
