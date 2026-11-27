@@ -38,6 +38,12 @@ for(const path of ['/','/deals/','/categories/1/','/guides/usb-c-phone-charger/'
 }
 assert.equal((await catalogPage(new Request('https://preview.pages.dev/'),env,next,guides,products)).status,404);
 assert.equal((await catalogPage(new Request('https://hicrewapps.com/assets/site.css'),env,next,guides,products)).status,404);
+const search=await catalogPage(new Request('https://hicrewapps.com/search/?q=USB-C&max=200'),env,next,guides,products);
+assert.equal(search.status,200);assert((await search.text()).includes('找到 <strong>1</strong> 筆商品'));
+const emptySearch=await catalogPage(new Request('https://hicrewapps.com/search/index.html?max=10'),env,next,guides,products);
+assert((await emptySearch.text()).includes('沒有符合條件的商品'));
 data.clear();
+const unavailable=await catalogPage(new Request('https://hicrewapps.com/search/'),env,next,guides,products);
+assert((await unavailable.text()).includes('商品資料暫未同步'));
 assert.equal((await catalogPage(new Request('https://hicrewapps.com/'),env,next,guides,products)).status,404);
 console.log('Live catalog auth, storage and HTML route checks passed');
