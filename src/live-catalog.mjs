@@ -58,7 +58,7 @@ export async function catalogApi(request,env,{verify=authorize}={}){
   if(new URL(request.url).hostname!==HOST)return json({enabled:false},404);
   if(request.method==='GET'){
     const current=await readCatalog(env);
-    return json({enabled:enabled(env),ready:!!current,...(current?{fetchedAt:current.fetchedAt,deals:current.deals.length,categories:current.categories.length,guideMatches:Object.fromEntries(Object.entries(current.guides).map(([k,v])=>[k,v.length]))}:{})});
+    return json({protocol:2,enabled:enabled(env),ready:!!current,...(current?{fetchedAt:current.fetchedAt,deals:current.deals.length,categories:current.categories.length,guideMatches:Object.fromEntries(Object.entries(current.guides).map(([k,v])=>[k,v.length]))}:{})});
   }
   if(request.method!=='POST')return json({error:'method'},405);
   if(!enabled(env))return json({error:'disabled'},503);
