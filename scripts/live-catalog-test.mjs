@@ -30,7 +30,7 @@ assert.equal((await catalogApi(post('bad'),env,{verify})).status,401);
 assert.equal((await catalogApi(post(valid,{...snapshot,fetchedAt:'2000-01-01T00:00:00Z'}),env,{verify})).status,400);
 assert.equal((await catalogApi(post(valid),env,{verify})).status,200);
 assert(data.has(KEY));
-const status=await (await catalogApi(new Request(url),env)).json();assert.equal(status.ready,true);assert.equal(status.protocol,4);
+const status=await (await catalogApi(new Request(url),env)).json();assert.equal(status.ready,true);assert.equal(status.protocol,5);
 const next=()=>new Response('fallback',{status:404});
 for(const path of ['/','/deals/','/categories/1/','/guides/usb-c-phone-charger/']){
  const res=await catalogPage(new Request('https://hicrewapps.com'+path),env,next,guides,products);

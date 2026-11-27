@@ -8,7 +8,7 @@ export const AUDIENCE='https://hicrewapps.com/api/catalog';
 const ISSUER='https://token.actions.githubusercontent.com';
 const WORKFLOW='magic76/crew-affiliate/.github/workflows/catalog-publish.yml@refs/heads/main';
 const REPO_ID='1472854687';
-const MAX_BYTES=512*1024;
+const MAX_BYTES=2*1024*1024;
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Robots-Tag':'noindex'}});
 const enabled=env=>env.CATALOG_PUBLISH_ENABLED==='1'&&!!env.CATALOG_KV;
 const bytes=s=>{
@@ -71,7 +71,7 @@ export async function catalogApi(request,env,{verify=checkIdentity}={}){
   if(new URL(request.url).hostname!==HOST)return json({enabled:false},404);
   if(request.method==='GET'){
     const current=await readCatalog(env);
-    return json({protocol:4,enabled:enabled(env),ready:!!current,...(current?{fetchedAt:current.fetchedAt,deals:current.deals.length,categories:current.categories.length,counts:catalogCounts(current),guideMatches:Object.fromEntries(Object.entries(current.guides).map(([k,v])=>[k,v.length]))}:{})});
+    return json({protocol:5,enabled:enabled(env),ready:!!current,...(current?{fetchedAt:current.fetchedAt,deals:current.deals.length,categories:current.categories.length,counts:catalogCounts(current),guideMatches:Object.fromEntries(Object.entries(current.guides).map(([k,v])=>[k,v.length]))}:{})});
   }
   if(request.method!=='POST')return json({error:'method'},405);
   if(!enabled(env))return json({error:'disabled'},503);

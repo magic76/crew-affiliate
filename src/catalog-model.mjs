@@ -1,3 +1,5 @@
+export const SHOPPING_KEYWORDS=Object.freeze(["65W GaN 充電器","100W 充電器","45W PPS 充電器","20W USB C 充電器","100W USB C 充電線","240W USB C 充電線","行動電源 10000mAh","行動電源 20000mAh","USB C 集線器","HDMI 傳輸線","無線滑鼠","無線鍵盤","筆電支架","手機支架","旅行轉接頭","延長線","抽取式衛生紙 箱購","捲筒衛生紙","廚房紙巾","濕紙巾","嬰兒尿布 L","嬰兒尿布 M","嬰兒拉拉褲","濃縮洗衣精","洗衣膠囊","洗衣精 補充包","洗碗精","洗碗機 清潔錠","垃圾袋","保鮮袋","保鮮盒","洗碗海綿","除濕盒","衣架","收納箱","牙刷","牙膏","電動牙刷 替換刷頭","保溫瓶","濾水壺 濾芯"]);
+export const MAX_EXPANDED_PRODUCTS=850;
 export const GUIDE_QUERIES=Object.freeze({
   'usb-c-phone-charger':{keyword:'USB-C 充電器',match:/充電器|充電頭|charger/i},
   'usb-c-cable-60w-100w':{keyword:'USB-C 充電線',match:/充電線|傳輸線|線材|cable/i},
@@ -47,5 +49,6 @@ export function validateCatalog(snapshot,now=new Date()){
   });
   if(!deals.length||!cats.length)throw new Error('Empty catalog');
   const guides=Object.fromEntries(Object.entries(GUIDE_QUERIES).map(([slug,g])=>[slug,products(Array.isArray(snapshot.guides[slug])?snapshot.guides[slug]:[]).filter(p=>g.match.test(p.productName))]));
-  return {version:1,fetchedAt:new Date(fetched).toISOString(),deals,categories:cats,guides};
+  const expanded=products(Array.isArray(snapshot.expanded)?snapshot.expanded:[],MAX_EXPANDED_PRODUCTS);
+  return {version:1,fetchedAt:new Date(fetched).toISOString(),deals,categories:cats,guides,expanded};
 }

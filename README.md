@@ -70,3 +70,6 @@ Production-only METRICS_ENABLED=1 and METRICS_DB binding to dedicated D1. Apply 
 ## MVP routing and catalog count
 
 `/affiliate` and supported public subpaths redirect 301 to the canonical root routes, preserving query parameters. Unknown affiliate paths return 404. `/guides/` is a guide directory. Search counts use unique product IDs across current validated deal, category and guide rows. `/api/catalog` exposes the same aggregate counts; no 500-product guarantee. Images retain provider URLs; a local labeled placeholder replaces failed images without retry loops or proxying/storing provider images.
+
+## Catalog expansion
+40 editorial purchase-intent keywords, conservative two-second pacing per search, bounded limit=10 probe (falls back to 5 if rejected), optional documented bestcategories detail without additional parameters if unique count below 501. Stop expansion on 429/401/403, do not bypass provider limits. No long-term storage, no invented products. Search/API counts share validated unique IDs; report target >500 separately from actual. Snapshot endpoint protocol 5, max 2 MiB; readback checks search count. Expansion remains dependent on provider response and approved usage terms.

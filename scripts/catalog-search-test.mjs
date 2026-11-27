@@ -28,4 +28,6 @@ assert(!evil.includes('<script>alert(1)</script>'));
 assert(render(guides,[],'',snapshot,new URLSearchParams('min=500&max=10'))['search/index.html'].includes('最低價格不能高於最高價格'));
 console.log('Shopping discovery tests passed');
 
-assert.deepEqual(catalogCounts(catalog),{deals:2,categoryProducts:2,guideProducts:1,sourceRows:5,uniqueProducts:3,duplicateRows:2});assert(pages['search/index.html'].includes('全站 3 件不重複商品'));assert(pages['search/index.html'].includes('data-product-image'));assert(pages['search/index.html'].includes('assets/product-image.js'));console.log('Catalog count checks passed');
+assert.deepEqual(catalogCounts(catalog),{deals:2,categoryProducts:2,guideProducts:1,keywordProducts:0,sourceRows:5,uniqueProducts:3,duplicateRows:2});assert(pages['search/index.html'].includes('全站 3 件不重複商品'));assert(pages['search/index.html'].includes('data-product-image'));assert(pages['search/index.html'].includes('assets/product-image.js'));console.log('Catalog count checks passed');
+
+const expanded=validateCatalog({...snapshot,expanded:[product(4,'無線滑鼠',299),one]});assert.equal(catalogCounts(expanded).uniqueProducts,4);assert.equal(searchCatalog(expanded,parseFilters(new URLSearchParams('q=無線滑鼠'))).length,1);

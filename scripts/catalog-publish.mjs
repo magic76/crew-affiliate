@@ -1,3 +1,4 @@
+import {catalogCounts} from '../src/catalog-search.mjs';
 import {checkIdentity} from '../src/live-catalog.mjs';
 import {verifyPublished} from '../src/catalog-readback.mjs';
 import {syncCatalog,validateCatalog} from '../src/catalog.mjs';
@@ -11,7 +12,7 @@ async function waitForEndpoint(){
       const res=await fetch(endpoint,{redirect:'error',signal:AbortSignal.timeout(10000),headers:{'Cache-Control':'no-cache'}});
       if(res.ok&&res.headers.get('Content-Type')?.includes('application/json')){
         const status=await res.json();
-        if(status.enabled===true&&status.protocol===4)return true;
+        if(status.enabled===true&&status.protocol===5)return true;
         if(status.enabled===false){disabled=true;if(process.env.GITHUB_EVENT_NAME!=='push')return false;}
       }
     }catch{}
@@ -54,5 +55,5 @@ try{
   if(result.ok!==true)throw Error('Upload not acknowledged');
   stage='public-readback';
   const verifiedPages=await verifyPublished(snapshot);
-  console.log(JSON.stringify({published:true,verifiedPages,deals:snapshot.deals.length,categories:snapshot.categories.length,guideMatches:Object.fromEntries(Object.entries(snapshot.guides).map(([k,v])=>[k,v.length]))}));
+  console.log(JSON.stringify({published:true,verifiedPages,counts:catalogCounts(snapshot),deals:snapshot.deals.length,categories:snapshot.categories.length,guideMatches:Object.fromEntries(Object.entries(snapshot.guides).map(([k,v])=>[k,v.length]))}));
 }catch{console.error(JSON.stringify({published:false,stage,httpStatus,authCheck}));process.exitCode=1;}
