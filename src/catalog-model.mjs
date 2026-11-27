@@ -6,6 +6,10 @@ export const GUIDE_QUERIES=Object.freeze({
   'travel-multiport-charger':{keyword:'多孔 充電器',match:/(?=.*(?:充電器|充電頭|charger))(?=.*(?:多孔|雙孔|三孔|四孔|[2345]\s*(?:孔|port)|[234]C[123]?A?))/i}
   ,'tissue-unit-price':{keyword:'抽取式衛生紙',match:/衛生紙/i},
   'diaper-unit-price':{keyword:'嬰兒尿布',match:/(?=.*(?:尿布|紙尿褲|拉拉褲))(?!(?:.*(?:成人|寵物|看護|尿布墊|尿布台|尿布袋)))/i},
+  'galaxy-pps-charger':{keyword:'45W PPS 充電器',match:/(?=.*45\s*w)(?=.*(?:充電器|充電頭|charger))/i},
+  'power-bank-capacity':{keyword:'行動電源',match:/行動電源|power bank/i},
+  'usb-c-hub-hdmi':{keyword:'USB C 集線器',match:/集線器|擴充基座|hub|多功能轉接/i},
+  'kitchen-paper-unit-price':{keyword:'廚房紙巾',match:/廚房紙巾|廚房用紙/i},
   'detergent-unit-price':{keyword:'洗衣精',match:/(?=.*洗衣精)(?!.*(?:空瓶|洗衣精瓶|洗衣精收納))/i}
 });
 const id=v=>(typeof v==='string'||Number.isSafeInteger(v))&&/^[1-9]\d{0,15}$/.test(String(v))?String(v):null;
