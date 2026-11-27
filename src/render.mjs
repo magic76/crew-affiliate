@@ -4,7 +4,7 @@ export function render(guides,products,base=""){
  const slugs=new Set();for(const g of guides){if(!/^[a-z0-9-]+$/.test(g.slug)||slugs.has(g.slug)||!g.sections.length)throw Error("Invalid guide");slugs.add(g.slug)}
  const provider=p=>p.provider??"shopee";
  const label=p=>provider(p)==="coupang"?"酷澎":"蝦皮";
- const valid=p=>p.approved===true&&((provider(p)==="shopee"&&/^https:\/\/(?:s\.shopee\.tw|shope\.ee|shopee\.tw)\/[^\s<>"'\\]+$/.test(p.affiliateUrl))||(provider(p)==="coupang"&&/^https:\/\/link\.tw\.coupang\.com\/a\/[a-zA-Z0-9_-]+(?:\?[^\s<>"'\\]*)?$/.test(p.affiliateUrl)))&&/^\d{4}-\d{2}-\d{2}$/.test(p.verifiedOn)&&p.name&&p.id&&slugs.has(p.guideSlug);
+ const valid=p=>p.approved===true&&((provider(p)==="shopee"&&/^https:\/\/(?:s\.shopee\.tw|shope\.ee|shopee\.tw)\/[^\s<>"'\\]+$/.test(p.affiliateUrl))||(provider(p)==="coupang"&&(/^https:\/\/link\.tw\.coupang\.com\/a\/[a-zA-Z0-9_-]+(?:\?[^\s<>"'\\]*)?$/.test(p.affiliateUrl)||/^https:\/\/coupa\.ng\/[A-Za-z0-9_-]+$/.test(p.affiliateUrl))))&&/^\d{4}-\d{2}-\d{2}$/.test(p.verifiedOn)&&p.name&&p.id&&slugs.has(p.guideSlug);
  for(const p of products)if(p.approved&&!valid(p))throw Error("Invalid approved product "+p.id);
 
  const ordinary=p=>p.preview===true&&p.approved!==true&&/^https:\/\/shopee\.tw\/product\/\d+\/\d+$/.test(p.productUrl)&&p.name&&p.id&&slugs.has(p.guideSlug);
