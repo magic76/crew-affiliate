@@ -34,3 +34,5 @@ data/guides.json 是指南來源；data/products.json 包含一筆一般商品�
 - 同步上限：3 個主題搜尋（各 5 筆）及最多 1 次 USB-C fallback、1 次 goldbox、1 次 hotcategories、最多 10 次分類詳情；分類詳情最多並行 3 次，失敗顯示空狀態。不呼叫 impressionUrl、不點擊商品。URL 與必要欄位白名單、去重、關鍵字名稱篩選，仍需人工確認商品與主題相關性。
 - 本地私密預覽（先安全設定環境變數金鑰）：export CATALOG_PREVIEW_FILE="$(mktemp -d)/catalog.json"；npm run catalog:preview；SITE_URL= npm run build；python3 -m http.server 8080 --bind 127.0.0.1 --directory public。預覽快照在 repo 外、限 0600、不覆寫，建置要求資料未超過一小時，預覽伺服器僅應在可信本地環境使用。完成後移除快照目錄，再執行 unset CATALOG_PREVIEW_FILE; npm run build 清除產出。勿提交、上傳或部署預覽檔案。
 - CI 只驗證真實資料渲染與頁面數，未保存或上傳快照、未發布商品、未啟用排程。Cloudflare 正常建置不讀取預覽資料；預覽禁止 SITE_URL，維持 noindex。noindex 不是存取控制，勿部署預覽。正式資料留存/圖片及價格展示條款、媒體核准、報表詳細參數仍待確認。正式管理後台應採存取控制及私有資料庫，不放在公開 Pages 或 repo。
+
+- 商品搜尋回傳的圖片實測使用 ads-partners.tw.coupang.com，已加入精確主機白名單；搜尋資料診斷只記錄固定分類及公開圖片主機，不輸出商品或追蹤 URL。正式發布仍未開啟。
