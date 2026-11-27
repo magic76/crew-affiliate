@@ -11,7 +11,7 @@ export function parseFilters(params=new URLSearchParams()){
 }
 export function searchCatalog(catalog,filters){
  if(!catalog||filters.invalidBudget)return [];
- const pool=filters.category==='deals'?catalog.deals:filters.category?catalog.categories.find(c=>c.categoryId===filters.category)?.products??[]:[...catalog.deals,...catalog.categories.flatMap(c=>c.products),...Object.values(catalog.guides).flat()];
+ const pool=filters.category==='deals'?catalog.deals:filters.category?catalog.categories.find(c=>c.categoryId===filters.category)?.products??[]:[...catalog.deals,...catalog.categories.flatMap(c=>c.products),...Object.values(catalog.guides).flat(),...(catalog.expanded??[])];
  const seen=new Set(),terms=fold(filters.q).split(/\s+/).filter(Boolean);
  const results=pool.filter(p=>{
   if(seen.has(p.productId))return false;seen.add(p.productId);
@@ -24,7 +24,7 @@ export function searchCatalog(catalog,filters){
 
 // Count validated source occurrences separately from the actual unique searchable pool.
 export function catalogCounts(catalog){
- if(!catalog)return {deals:0,categoryProducts:0,guideProducts:0,sourceRows:0,uniqueProducts:0,duplicateRows:0};
- const deals=catalog.deals.length,categoryProducts=catalog.categories.reduce((n,c)=>n+c.products.length,0),guideProducts=Object.values(catalog.guides).reduce((n,rows)=>n+rows.length,0),sourceRows=deals+categoryProducts+guideProducts,uniqueProducts=searchCatalog(catalog,parseFilters()).length;
- return {deals,categoryProducts,guideProducts,sourceRows,uniqueProducts,duplicateRows:sourceRows-uniqueProducts};
+ if(!catalog)return {deals:0,categoryProducts:0,guideProducts:0,keywordProducts:0,sourceRows:0,uniqueProducts:0,duplicateRows:0};
+ const deals=catalog.deals.length,categoryProducts=catalog.categories.reduce((n,c)=>n+c.products.length,0),guideProducts=Object.values(catalog.guides).reduce((n,rows)=>n+rows.length,0),keywordProducts=(catalog.expanded??[]).length,sourceRows=deals+categoryProducts+guideProducts+keywordProducts,uniqueProducts=searchCatalog(catalog,parseFilters()).length;
+ return {deals,categoryProducts,guideProducts,keywordProducts,sourceRows,uniqueProducts,duplicateRows:sourceRows-uniqueProducts};
 }
