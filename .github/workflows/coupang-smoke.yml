@@ -1,7 +1,7 @@
 name: Coupang Partners API smoke
 on:
   push:
-    branches: [chatgpt/catalog-workers-fetch]
+    branches: [chatgpt/shopping-discovery]
     paths: ['.github/workflows/coupang-smoke.yml']
   workflow_dispatch:
 permissions:
