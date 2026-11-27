@@ -17,7 +17,7 @@ async function verify(snapshot){
     assert(html.includes('content="noindex,follow"'));
     assert(!html.includes('impressionUrl'));
     for(const m of html.matchAll(/(?:href|src)="([^"]+)"/g)){
-      const target=m[1].split('#')[0];
+      const target=m[1].split(/[?#]/)[0];
       if(!target||target.startsWith('https:'))continue;
       const resolved=new URL(target,'https://preview.invalid/'+path).pathname.slice(1);
       assert(resolved==='assets/site.css'||Object.hasOwn(files,resolved),'Broken preview link');
