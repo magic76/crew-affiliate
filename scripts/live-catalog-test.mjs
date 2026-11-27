@@ -51,7 +51,7 @@ data.set(KEY,saved);
 console.log('Live catalog auth, storage and HTML route checks passed');
 
 const seo={...env,SEO_INDEX_ENABLED:'1'};
-const urls=['/','/unit-price/','/tools/','/tools/electricity-cost/','/tools/ownership-cost/','/tools/filter-cost/','/tools/storage-capacity/','/tools/diaper-budget/','/tools/charging-power/','/about/',...guides.map(g=>'/guides/'+g.slug+'/')];
+const urls=['/','/unit-price/','/tools/','/tools/tv-size/','/tools/electricity-cost/','/tools/ownership-cost/','/tools/filter-cost/','/tools/storage-capacity/','/tools/diaper-budget/','/tools/charging-power/','/about/',...guides.map(g=>'/guides/'+g.slug+'/')];
 for(const path of urls){
  const res=await catalogPage(new Request('https://hicrewapps.com'+path),seo,next,guides,products);
  assert.equal(res.status,200);assert.equal(res.headers.get('X-Robots-Tag'),'index, follow');
