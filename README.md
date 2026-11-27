@@ -27,3 +27,10 @@ data/guides.json 是指南來源；data/products.json 包含一筆一般商品�
 
 8. 商品診斷：node scripts/coupang-products.mjs --self-test；設定金鑰後執行 node scripts/coupang-products.mjs，單次並行查詢 search、hotcategories、goldbox。搜尋暫用 keyword=USB-C&limit=5；參數及回傳欄位以實測和展開的官方 Document 確認。僅輸出狀態、結構與筆數，不保存原始商品資料或開啟追蹤網址。
 9. 官方速率限制：search 50 次/分鐘、reports 500 次/小時、Reco 1000 次/分鐘；goldbox 每日 07:30 更新，報表每日 12:00 更新（時區待確認）。reports/clicks、orders、cancels、commission 及 ads 報表已列於官方文件，日期參數、資料格式、歸因維度尚未提供，暫不呼叫或發布收益。
+
+## 商品型網站預覽（不發布）
+
+- 首頁每日特價（8 筆摘要）、特價完整頁、最多 10 個熱門分類頁、三篇既有指南的關鍵字相關商品。使用真實 API 圖片、價格與追蹤網址，保留分潤揭露及資料更新時間，不把搜尋結果稱為實測。
+- 同步上限：3 個搜尋（各 5 筆）、1 次 goldbox、1 次 hotcategories、最多 10 次分類詳情；分類詳情最多並行 3 次，失敗顯示空狀態。不呼叫 impressionUrl、不點擊商品。URL 與必要欄位白名單、去重、關鍵字名稱篩選，仍需人工確認商品與主題相關性。
+- 本地私密預覽（先安全設定環境變數金鑰）：export CATALOG_PREVIEW_FILE="$(mktemp -d)/catalog.json"；npm run catalog:preview；SITE_URL= npm run build；npm run preview。預覽快照在 repo 外、限 0600、不覆寫，建置要求資料未超過一小時，預覽伺服器僅應在可信本地環境使用。完成後移除快照目錄，再執行 unset CATALOG_PREVIEW_FILE; npm run build 清除產出。勿提交、上傳或部署預覽檔案。
+- CI 只驗證真實資料渲染與頁面數，未保存或上傳快照、未發布商品、未啟用排程。Cloudflare 正常建置不讀取預覽資料；預覽禁止 SITE_URL，維持 noindex。noindex 不是存取控制，勿部署預覽。正式資料留存/圖片及價格展示條款、媒體核准、報表詳細參數仍待確認。正式管理後台應採存取控制及私有資料庫，不放在公開 Pages 或 repo。
