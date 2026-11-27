@@ -15,7 +15,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Offline checks
-        run: node scripts/coupang-smoke.mjs --self-test
+        run: npm run build && npm test
       - name: One Partners deeplink API probe
         env:
           COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
@@ -26,3 +26,8 @@ jobs:
             exit 1
           fi
           node scripts/coupang-smoke.mjs
+      - name: One Partners Reco API probe (no impression)
+        env:
+          COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
+          COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
+        run: node scripts/coupang-reco.mjs
