@@ -2,6 +2,9 @@ export const GUIDE_QUERIES=Object.freeze({
   'usb-c-phone-charger':{keyword:'USB-C 充電器',match:/充電器|充電頭|charger/i},
   'usb-c-cable-60w-100w':{keyword:'USB-C 充電線',match:/充電線|傳輸線|線材|cable/i},
   'travel-multiport-charger':{keyword:'多孔 充電器',match:/(?=.*(?:充電器|充電頭|charger))(?=.*(?:多孔|雙孔|三孔|四孔|[2345]\s*(?:孔|port)|[234]C[123]?A?))/i}
+  ,'tissue-unit-price':{keyword:'抽取式衛生紙',match:/衛生紙/i},
+  'diaper-unit-price':{keyword:'嬰兒尿布',match:/(?=.*(?:尿布|紙尿褲|拉拉褲))(?!(?:.*(?:成人|寵物|看護|尿布墊|尿布台|尿布袋)))/i},
+  'detergent-unit-price':{keyword:'洗衣精',match:/(?=.*洗衣精)(?!.*(?:空瓶|洗衣精瓶|洗衣精收納))/i}
 });
 const id=v=>(typeof v==='string'||Number.isSafeInteger(v))&&/^[1-9]\d{0,15}$/.test(String(v))?String(v):null;
 const name=v=>typeof v==='string'&&v.trim().length>0&&v.length<=200?v.trim():null;
