@@ -98,6 +98,7 @@ export async function catalogApi(request,env,{verify=checkIdentity}={}){
 function route(path){
   if(path==='/'||path==='/index.html'||path==='/index')return 'index.html';
   const clean=path.replace(/\/(?:index(?:\.html)?)$/,'/').replace(/\/$/,'');
+  if(/^\/tools\/[a-z0-9-]+$/.test(clean)&&indexable(clean.slice(1)+'/index.html'))return clean.slice(1)+'/index.html';
   if(/^\/(?:guides|unit-price|tools|about|search|compare|deals|categories\/[1-9]\d{0,15}|guides\/[a-z0-9-]+)$/.test(clean))return clean.slice(1)+'/index.html';
   return null;
 }
