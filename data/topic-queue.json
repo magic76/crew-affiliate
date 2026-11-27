@@ -1,0 +1,222 @@
+{
+  "version": 1,
+  "method": "Search-result observation and editorial hypotheses; intent and fit are editorial scores 1–3, not measured volume or competition. Competitor content is market evidence, never a factual source to copy. GSC data not yet connected.",
+  "topics": [
+    {
+      "id": "iphone-charger-wattage",
+      "keyword": "iPhone 充電器 20W 40W 怎麼選",
+      "cluster": "3C",
+      "intent": 3,
+      "fit": 3,
+      "angle": "依官方各機型快充條件比較；更新現有手機指南或獨立機型決策表，避免重複。",
+      "evidence": [
+        {
+          "url": "https://support.apple.com/zh-tw/102574",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "existing-guide",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "galaxy-pps-charger",
+      "keyword": "三星 45W 充電器 PPS 選購",
+      "cluster": "3C",
+      "intent": 3,
+      "fit": 3,
+      "angle": "依相容機型、PPS 範圍與線材要求做核對清單。",
+      "evidence": [
+        {
+          "url": "https://www.samsung.com/tw/mobile-accessories/45w-power-adapter-white-ep-t4511xwtgtw/",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "candidate",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "usb-c-240w",
+      "keyword": "USB-C 60W 100W 240W 差別",
+      "cluster": "3C",
+      "intent": 3,
+      "fit": 3,
+      "angle": "加入新舊認證標示及實際用途比較，優先擴充既有線材指南。",
+      "evidence": [
+        {
+          "url": "https://www.usb.org/cable_connector",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "existing-guide",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "gan-multiport",
+      "keyword": "65W 多孔充電器 功率分配",
+      "cluster": "3C",
+      "intent": 3,
+      "fit": 3,
+      "angle": "提供實際原廠配電表與試算，而非泛稱最高瓦數。",
+      "evidence": [
+        {
+          "url": "https://store.acer.com/zh-tw/gan-charger-wattage-ports-protocol-guide-post",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "existing-guide",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "charger-safety",
+      "keyword": "充電器 BSMI 商品檢驗標識",
+      "cluster": "3C",
+      "intent": 2,
+      "fit": 3,
+      "angle": "提供購買前核對方式及官方來源，與既有指南互補。",
+      "evidence": [
+        {
+          "url": "https://www.bsmi.gov.tw/wSite/ct?ctNode=2595&mp=58&xItem=116253",
+          "type": "manufacturer-or-authority"
+        }
+      ],
+      "status": "candidate",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "tissue-unit-price",
+      "keyword": "衛生紙 每抽價格 計算",
+      "cluster": "家庭用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "按抽數與包數換算，區分張、抽、層及運費；用可操作工具提供增益。",
+      "evidence": [
+        {
+          "url": "https://fooddeal.tw/market/tissue/",
+          "type": "existing-search-result"
+        }
+      ],
+      "status": "candidate",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "detergent-unit-price",
+      "keyword": "洗衣精 每100ml 價格 比較",
+      "cluster": "家庭用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "毫升與公克不能直接混比；另考慮每次用量。",
+      "evidence": [
+        {
+          "url": "https://bjcashflow.com/stock-up-price/",
+          "type": "existing-search-result"
+        }
+      ],
+      "status": "candidate",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "diaper-unit-price",
+      "keyword": "尿布 每片價格 比較",
+      "cluster": "母嬰用品",
+      "intent": 3,
+      "fit": 3,
+      "angle": "同尺寸與型式才適合比較，先計算片數，再核對貼合需求。",
+      "evidence": [
+        {
+          "url": "https://bjcashflow.com/stock-up-price/",
+          "type": "existing-search-result"
+        }
+      ],
+      "status": "candidate",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "wet-wipes-unit-price",
+      "keyword": "濕紙巾 每抽 價格 計算",
+      "cluster": "家庭用品",
+      "intent": 3,
+      "fit": 2,
+      "angle": "同尺寸、片數與用途；不推測成分或醫療效果。",
+      "evidence": [
+        {
+          "url": "https://most.tw/posts/blog/household-essentials-guide-2026/",
+          "type": "existing-search-result"
+        }
+      ],
+      "status": "candidate",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "kitchen-paper-unit-price",
+      "keyword": "廚房紙巾 每張價格 比較",
+      "cluster": "家庭用品",
+      "intent": 3,
+      "fit": 2,
+      "angle": "同張數或面積比較，核對捲數、每捲張數與尺寸。",
+      "evidence": [
+        {
+          "url": "https://most.tw/posts/blog/household-essentials-guide-2026/",
+          "type": "existing-search-result"
+        }
+      ],
+      "status": "candidate",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "dish-liquid-unit-price",
+      "keyword": "洗碗精 容量 單位價格",
+      "cluster": "家庭用品",
+      "intent": 3,
+      "fit": 2,
+      "angle": "同容量單位與稀釋條件，避免濃縮與一般品直接比較。",
+      "evidence": [
+        {
+          "url": "https://most.tw/posts/blog/household-essentials-guide-2026/",
+          "type": "existing-search-result"
+        }
+      ],
+      "status": "candidate",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    },
+    {
+      "id": "bulk-buying",
+      "keyword": "日用品 箱購 單位成本",
+      "cluster": "家庭用品",
+      "intent": 3,
+      "fit": 2,
+      "angle": "計算含運總價、保存空間與使用速度，不把大包裝等同便宜。",
+      "evidence": [
+        {
+          "url": "https://bjcashflow.com/stock-up-price/",
+          "type": "existing-search-result"
+        }
+      ],
+      "status": "candidate",
+      "searchVolume": null,
+      "competition": null,
+      "researchedOn": "2026-11-27"
+    }
+  ]
+}
