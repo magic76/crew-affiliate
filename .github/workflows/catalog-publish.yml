@@ -1,0 +1,35 @@
+name: Publish fresh Coupang catalog
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/catalog-publish.yml'
+      - 'scripts/catalog-publish.mjs'
+      - 'src/catalog*.mjs'
+      - 'src/live-catalog.mjs'
+      - 'functions/**'
+  schedule:
+    - cron: '7,37 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: crew-affiliate-catalog-production
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.repository == 'magic76/crew-affiliate' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Verify offline
+        run: npm run build && npm test
+      - name: Publish normalized fresh catalog
+        env:
+          COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
+          COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
+        run: node scripts/catalog-publish.mjs
