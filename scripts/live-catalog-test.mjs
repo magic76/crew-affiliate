@@ -17,6 +17,10 @@ const fetchImpl=async u=>{assert.equal(u,'https://token.actions.githubuserconten
 const verify=t=>authorize(t,{fetchImpl,now});
 const valid=await jwt(claim);assert(await verify(valid));
 assert(await verify(await jwt({...claim,sub:'custom:repo_id:1472854687'})));
+assert(await verify(await jwt({...claim,nbf:undefined,exp:seconds+3600})));
+assert(await verify(await jwt({...claim,iat:String(seconds),exp:String(seconds+300)})));
+assert.equal(await verify(await jwt({...claim,iat:seconds-601})),false);
+assert.equal(await verify(await jwt({...claim,nbf:seconds+31})),false);
 for(const bad of [{aud:'wrong'},{repository_id:'0'},{ref:'refs/heads/evil'},{exp:seconds-1},{workflow_ref:'other'},{sub:''},{event_name:'pull_request'},{repository:'other/repo'}])assert.equal(await verify(await jwt({...claim,...bad})),false);
 assert.equal(await verify(valid.slice(0,-8)+'AAAAAAAA'),false);
 function post(token,body=snapshot){return new Request(url,{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(body)});}
@@ -25,7 +29,7 @@ assert.equal((await catalogApi(post('bad'),env,{verify})).status,401);
 assert.equal((await catalogApi(post(valid,{...snapshot,fetchedAt:'2000-01-01T00:00:00Z'}),env,{verify})).status,400);
 assert.equal((await catalogApi(post(valid),env,{verify})).status,200);
 assert(data.has(KEY));
-const status=await (await catalogApi(new Request(url),env)).json();assert.equal(status.ready,true);assert.equal(status.protocol,2);
+const status=await (await catalogApi(new Request(url),env)).json();assert.equal(status.ready,true);assert.equal(status.protocol,3);
 const next=()=>new Response('fallback',{status:404});
 for(const path of ['/','/deals/','/categories/1/','/guides/usb-c-phone-charger/']){
  const res=await catalogPage(new Request('https://hicrewapps.com'+path),env,next,guides,products);

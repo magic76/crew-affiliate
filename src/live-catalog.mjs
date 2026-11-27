@@ -14,25 +14,35 @@ const bytes=s=>{
   return Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')+'='.repeat((4-s.length%4)%4)),c=>c.charCodeAt(0));
 };
 const parse=s=>JSON.parse(new TextDecoder().decode(bytes(s)));
-export async function authorize(token,{fetchImpl=fetch,now=Date.now()}={}){
+const numericDate=value=>Number.isSafeInteger(value)?value:(typeof value==='string'&&/^\d{1,12}$/.test(value)?Number(value):null);
+export async function checkIdentity(token,{fetchImpl=fetch,now=Date.now()}={}){
+  let stage='format';
   try{
-    if(typeof token!=='string'||token.length>16000)return false;
+    if(typeof token!=='string'||token.length>16000)return stage;
     const parts=token.split('.');
-    if(parts.length!==3)return false;
+    if(parts.length!==3)return stage;
     const [h,p,s]=parts,header=parse(h),claims=parse(p);
     const seconds=Math.floor(now/1000);
-    // GitHub subject templates may be customized. Authorize by signed immutable repo ID, exact workflow, ref and event instead.
-    if(header.alg!=='RS256'||typeof header.kid!=='string'||header.kid.length>200)return false;
-    if(claims.iss!==ISSUER||claims.aud!==AUDIENCE||claims.repository!=='magic76/crew-affiliate'||String(claims.repository_id)!==REPO_ID||claims.ref!=='refs/heads/main'||claims.workflow_ref!==WORKFLOW||(typeof claims.sub!=='string'||!claims.sub.length)||!['push','schedule','workflow_dispatch'].includes(claims.event_name))return false;
-    if(!Number.isFinite(claims.exp)||!Number.isFinite(claims.iat)||!Number.isFinite(claims.nbf)||claims.exp<=seconds||claims.nbf>seconds+30||claims.iat>seconds+30||claims.exp-claims.iat>600||seconds-claims.iat>600)return false;
-    const res=await fetchImpl(ISSUER+'/.well-known/jwks',{redirect:'error',signal:AbortSignal.timeout(5000)});
-    if(!res.ok)return false;
-    const jwks=await res.json(),key=jwks.keys?.find(k=>k.kid===header.kid&&k.kty==='RSA'&&(!k.alg||k.alg==='RS256'));
-    if(!key)return false;
+    if(header.alg!=='RS256'||typeof header.kid!=='string'||!header.kid.length||header.kid.length>200)return stage;
+    stage='claims';
+    if(claims.iss!==ISSUER||claims.aud!==AUDIENCE||claims.repository!=='magic76/crew-affiliate'||String(claims.repository_id)!==REPO_ID||claims.ref!=='refs/heads/main'||claims.workflow_ref!==WORKFLOW||(typeof claims.sub!=='string'||!claims.sub.length)||!['push','schedule','workflow_dispatch'].includes(claims.event_name))return stage;
+    stage='time';
+    const exp=numericDate(claims.exp),iat=numericDate(claims.iat),nbf=claims.nbf===undefined?iat:numericDate(claims.nbf);
+    // Reject expired, future and old tokens even if GitHub issues a longer-lived credential.
+    if(exp===null||iat===null||nbf===null||exp<=seconds||exp<=iat||nbf>seconds+30||iat>seconds+30||seconds-iat>600)return stage;
+    stage='jwks';
+    const res=await fetchImpl(ISSUER+'/.well-known/jwks',{redirect:'error',signal:AbortSignal.timeout(10000)});
+    if(!res.ok)return stage;
+    const jwks=await res.json();
+    stage='key';
+    const key=jwks.keys?.find(k=>k.kid===header.kid&&k.kty==='RSA'&&(!k.alg||k.alg==='RS256'));
+    if(!key)return stage;
     const pub=await crypto.subtle.importKey('jwk',key,{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['verify']);
-    return await crypto.subtle.verify('RSASSA-PKCS1-v1_5',pub,bytes(s),new TextEncoder().encode(h+'.'+p));
-  }catch{return false;}
+    stage='signature';
+    return await crypto.subtle.verify('RSASSA-PKCS1-v1_5',pub,bytes(s),new TextEncoder().encode(h+'.'+p))?'ok':stage;
+  }catch{return stage;}
 }
+export async function authorize(token,opts){return await checkIdentity(token,opts)==='ok';}
 export async function readCatalog(env){
   if(!enabled(env))return null;
   try{
@@ -54,16 +64,17 @@ async function readBody(request){
   for(const c of chunks){out.set(c,offset);offset+=c.byteLength;}
   return JSON.parse(new TextDecoder().decode(out));
 }
-export async function catalogApi(request,env,{verify=authorize}={}){
+export async function catalogApi(request,env,{verify=checkIdentity}={}){
   if(new URL(request.url).hostname!==HOST)return json({enabled:false},404);
   if(request.method==='GET'){
     const current=await readCatalog(env);
-    return json({protocol:2,enabled:enabled(env),ready:!!current,...(current?{fetchedAt:current.fetchedAt,deals:current.deals.length,categories:current.categories.length,guideMatches:Object.fromEntries(Object.entries(current.guides).map(([k,v])=>[k,v.length]))}:{})});
+    return json({protocol:3,enabled:enabled(env),ready:!!current,...(current?{fetchedAt:current.fetchedAt,deals:current.deals.length,categories:current.categories.length,guideMatches:Object.fromEntries(Object.entries(current.guides).map(([k,v])=>[k,v.length]))}:{})});
   }
   if(request.method!=='POST')return json({error:'method'},405);
   if(!enabled(env))return json({error:'disabled'},503);
   const auth=request.headers.get('Authorization')||'';
-  if(!auth.startsWith('Bearer ')||!await verify(auth.slice(7)))return json({error:'unauthorized'},401);
+  const check=auth.startsWith('Bearer ')?await verify(auth.slice(7)):'format';
+  if(check!==true&&check!=='ok')return json({error:'unauthorized',check:['format','claims','time','jwks','key','signature'].includes(check)?check:'invalid'},401);
   let snapshot;
   try{
     if(!request.headers.get('Content-Type')?.startsWith('application/json'))throw Error('Content type');
