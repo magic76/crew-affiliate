@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {verifyPublished} from '../src/catalog-readback.mjs';
+const snapshot={fetchedAt:new Date().toISOString(),categories:[{categoryId:'1',products:[{}]}],guides:{'usb-c-phone-charger':[{}]}};
+const calls=[];
+const html='<section id="daily-deals" class="catalog-grid">每日特價 相關商品搜尋結果 <div class="catalog-card">NT$ 199<a rel="sponsored nofollow noopener noreferrer">商品</a></div></section>';
+const fetchImpl=async url=>{calls.push(new URL(url).pathname);return url.endsWith('/api/catalog')?Response.json({ready:true,fetchedAt:snapshot.fetchedAt}):new Response(html);};
+const opts={fetchImpl,attempts:1,delayImpl:async()=>{}};
+assert.equal(await verifyPublished(snapshot,opts),4);
+assert.deepEqual(calls.sort(),['/','/api/catalog','/categories/1/','/deals/','/guides/usb-c-phone-charger/'].sort());
+await assert.rejects(()=>verifyPublished(snapshot,{...opts,fetchImpl:async url=>url.endsWith('/api/catalog')?Response.json({ready:true,fetchedAt:'2000-01-01T00:00:00Z'}):new Response(html)}));
+await assert.rejects(()=>verifyPublished(snapshot,{...opts,fetchImpl:async url=>url.endsWith('/api/catalog')?Response.json({ready:true,fetchedAt:snapshot.fetchedAt}):new Response('no cards')}));
+console.log('Production readback tests passed');
