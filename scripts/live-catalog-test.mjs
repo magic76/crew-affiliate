@@ -16,7 +16,8 @@ async function jwt(c){const unsigned=b64(JSON.stringify({alg:'RS256',kid:'test'}
 const fetchImpl=async u=>{assert.equal(u,'https://token.actions.githubusercontent.com/.well-known/jwks');return Response.json({keys:[jwk]});};
 const verify=t=>authorize(t,{fetchImpl,now});
 const valid=await jwt(claim);assert(await verify(valid));
-for(const bad of [{aud:'wrong'},{repository_id:'0'},{ref:'refs/heads/evil'},{exp:seconds-1},{workflow_ref:'other'},{sub:'wrong'}])assert.equal(await verify(await jwt({...claim,...bad})),false);
+assert(await verify(await jwt({...claim,sub:'custom:repo_id:1472854687'})));
+for(const bad of [{aud:'wrong'},{repository_id:'0'},{ref:'refs/heads/evil'},{exp:seconds-1},{workflow_ref:'other'},{sub:''},{event_name:'pull_request'},{repository:'other/repo'}])assert.equal(await verify(await jwt({...claim,...bad})),false);
 assert.equal(await verify(valid.slice(0,-8)+'AAAAAAAA'),false);
 function post(token,body=snapshot){return new Request(url,{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(body)});}
 assert.equal((await catalogApi(post(valid),{...env,CATALOG_PUBLISH_ENABLED:'0'},{verify})).status,503);
