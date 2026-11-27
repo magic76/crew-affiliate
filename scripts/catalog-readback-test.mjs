@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import {verifyPublished} from '../src/catalog-readback.mjs';
-const snapshot={fetchedAt:new Date().toISOString(),deals:[{productId:'1'}],categories:[{categoryId:'1',products:[{productId:'1'}]}],guides:{'usb-c-phone-charger':[{productId:'1'}]}};
+const product={productId:'1',productName:'USB-C 充電器',productPrice:199,productImage:'https://t2c.coupangcdn.com/test.png',productUrl:'https://coupa.ng/test'};
+const snapshot={fetchedAt:new Date().toISOString(),deals:[product],categories:[{categoryId:'1',products:[product]}],guides:{'usb-c-phone-charger':[product]}};
 const calls=[];
-const html='<section id="daily-deals" class="catalog-grid">找到 <strong>1</strong> 筆商品 每日特價 相關商品搜尋結果 <div class="catalog-card">NT$ 199<a rel="sponsored nofollow noopener noreferrer">商品</a></div></section>';
+const html='<section id="daily-deals" class="catalog-grid">找到 <strong>1</strong> 筆商品 每日特價 <section id="guide-products"><h2>相關商品</h2><img data-product-image><script src="/assets/product-image.js"></script></section> <div class="catalog-card">NT$ 199<a rel="sponsored nofollow noopener noreferrer">商品</a></div></section>';
 const fetchImpl=async url=>{calls.push(new URL(url).pathname);return url.endsWith('/api/catalog')?Response.json({ready:true,counts:{uniqueProducts:1},fetchedAt:snapshot.fetchedAt}):new Response(html);};
 const opts={fetchImpl,attempts:1,delayImpl:async()=>{}};
 assert.equal(await verifyPublished(snapshot,opts),5);
