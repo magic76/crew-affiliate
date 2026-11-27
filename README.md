@@ -22,4 +22,5 @@ data/guides.json 是指南來源；data/products.json 包含一筆一般商品�
 3. 台灣 Partners Guide 確認 gateway 為 https://api-gateway.tw.coupang.com，POST /v2/providers/affiliate_open_api/apis/openapi/v1/deeplink，HMAC 簽章使用 UTC 時間、方法、路徑、query（不含問號）。使用者已在 Termux 成功取得 rCode=0 與 shortenUrl。
 4. 執行 node scripts/coupang-smoke.mjs --self-test（不連網）；設定金鑰後執行 node scripts/coupang-smoke.mjs，單次 POST 產生測試分潤連結，只輸出狀態，不輸出原始回應或連結。雲端若被拒絕，遵守平台限制，不繞過。
 5. 經人工核對的真實分潤商品可加入 data/products.json：provider: coupang、id、guideSlug、name、description（選填）、affiliateUrl（支援官方 https://coupa.ng/… 及 https://link.tw.coupang.com/a/…）、verifiedOn、approved: true。正式商品含分潤揭露。搜尋結果連結不得冒充特定商品。
-6. 商品搜尋、推薦、業績報表、同步頻率、使用期限仍待 Partners Document / Reco API 文件確認；未排程、未發布真實酷澎商品，API 成功不等於成交佣金已驗證。
+6. Reco API 已確認：POST /v2/providers/affiliate_open_api/apis/openapi/v2/products/reco。執行 node scripts/coupang-reco.mjs --self-test 或設定金鑰後執行 node scripts/coupang-reco.mjs。單次診斷只傳實際網站 domain/page 與 imp 的原生廣告、圖片尺寸及暫定 placementId；不傳 device/user、不呼叫 impressionUrl 或商品連結、不記錄原始資料。回傳商品數量及必要欄位完整數；空結果不等於認證失敗。
+7. Reco 是廣告推薦，未記載 keyword 查詢；正式展示須在真實曝光時依文件呼叫 impressionUrl，並先核對隱私、平台規則、媒體核准、快取期限及 placement/subId 設定。商品搜尋與報表仍待 Document。尚未排程、發布真實商品或驗證成交佣金。
