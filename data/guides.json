@@ -60,7 +60,22 @@
         "所有 USB-C 充電器都支援 PPS 嗎？",
         "不一定，請查看製造商標示的協議與輸出範圍。"
       ]
-    ]
+    ],
+    "sources": [
+      [
+        "Apple 支援：iPhone 快充條件（依機型）",
+        "https://support.apple.com/zh-tw/102574"
+      ],
+      [
+        "Samsung 支援：Galaxy 快速充電",
+        "https://www.samsung.com/tw/support/mobile-devices/enable-fast-charging-and-fast-wireless-charging-samsung-galaxy/"
+      ],
+      [
+        "標準檢驗局：快充型充電器選購",
+        "https://www.bsmi.gov.tw/wSite/ct?ctNode=2595&mp=58&xItem=116253"
+      ]
+    ],
+    "reviewedOn": "2026-11-27"
   },
   {
     "slug": "usb-c-cable-60w-100w",
@@ -84,6 +99,10 @@
       [
         "依用途選擇",
         "確認裝置功率、資料傳輸用途及需要的長度，再挑線材。"
+      ],
+      [
+        "100W 舊標示與 240W 新標示",
+        "USB-IF 現行 USB-C 對 USB-C 線材認證計畫以 60W 或 240W 標示功率能力。市面仍有標示 100W 的線材；不要只憑瓦數推定已取得現行認證。請查看線材實際額定規格與認證資訊。"
       ]
     ],
     "checks": [
@@ -118,7 +137,18 @@
         "60W 線一定比 100W 線傳輸慢嗎？",
         "不一定，資料速率與充電額定功率是不同規格。"
       ]
-    ]
+    ],
+    "sources": [
+      [
+        "USB-IF：線材認證及功率標示",
+        "https://www.usb.org/cable_connector"
+      ],
+      [
+        "USB-IF：線材規範更新",
+        "https://compliance.usb.org/index.asp?Format=Standard&UpdateFile=Cables+and+Connectors"
+      ]
+    ],
+    "reviewedOn": "2026-11-27"
   },
   {
     "slug": "travel-multiport-charger",
@@ -181,6 +211,17 @@
         "旅行轉接頭可以轉換電壓嗎？",
         "一般轉接頭僅轉換插頭形式，須核對設備輸入電壓。"
       ]
-    ]
+    ],
+    "sources": [
+      [
+        "Acer：多孔充電器規格與功率分配",
+        "https://store.acer.com/zh-tw/gan-charger-wattage-ports-protocol-guide-post"
+      ],
+      [
+        "標準檢驗局：快充型充電器選購",
+        "https://www.bsmi.gov.tw/wSite/ct?ctNode=2595&mp=58&xItem=116253"
+      ]
+    ],
+    "reviewedOn": "2026-11-27"
   }
 ]
