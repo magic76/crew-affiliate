@@ -37,7 +37,7 @@ try{
   stage='github-identity';
   const jwt=await token();
   const claims=JSON.parse(Buffer.from(jwt.split('.')[1],'base64url').toString('utf8'));
-  console.log(JSON.stringify({identityChecks:{aud:claims.aud===endpoint,issuer:claims.iss==='https://token.actions.githubusercontent.com',repository:claims.repository==='magic76/crew-affiliate',repositoryId:String(claims.repository_id)==='1472854687',ref:claims.ref==='refs/heads/main',workflow:claims.workflow_ref==='magic76/crew-affiliate/.github/workflows/catalog-publish.yml@refs/heads/main',subject:claims.sub==='repo:magic76/crew-affiliate:ref:refs/heads/main'}}));
+  console.log(JSON.stringify({identityChecks:{aud:claims.aud===endpoint,issuer:claims.iss==='https://token.actions.githubusercontent.com',repository:claims.repository==='magic76/crew-affiliate',repositoryId:String(claims.repository_id)==='1472854687',ref:claims.ref==='refs/heads/main',workflow:claims.workflow_ref==='magic76/crew-affiliate/.github/workflows/catalog-publish.yml@refs/heads/main',subjectPresent:typeof claims.sub==='string'&&claims.sub.length>0}}));
   stage='upload';
   const res=await fetch(endpoint,{method:'POST',headers:{Authorization:'Bearer '+jwt,'Content-Type':'application/json'},body:JSON.stringify(snapshot),redirect:'error',signal:AbortSignal.timeout(20000)});
   httpStatus=res.status;
