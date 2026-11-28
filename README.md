@@ -73,3 +73,6 @@ Production-only METRICS_ENABLED=1 and METRICS_DB binding to dedicated D1. Apply 
 
 ## Catalog expansion
 40 editorial purchase-intent keywords, conservative two-second pacing per search, bounded limit=10 probe (falls back to 5 if rejected), optional documented bestcategories detail without additional parameters if unique count below 501. Stop expansion on 429/401/403, do not bypass provider limits. No long-term storage, no invented products. Search/API counts share validated unique IDs; report target >500 separately from actual. Snapshot endpoint protocol 5, max 2 MiB; readback checks search count. Expansion remains dependent on provider response and approved usage terms.
+
+## 商品卡片賣點（CRO 第一階段）
+首頁、商品探索、每日特價、分類及指南中的商品卡共用 `productBenefits`。以已同步商品標題的品類與明示特色生成簡短使用利益；特色不足時只顯示品類用途，品類不明、配件或否定／混合名稱則不生成。最多兩個明示特色，不新增價格、優惠、評價、實測或未提供的規格。比較表、指南正文與購物工具不變。仍沿用原始 sponsored 連結和點擊統計。無額外 API、快照欄位、快取、金鑰或資料留存。本階段是確定性文案規則，不是 Gemini 即時產文；若後續加入模型，應先取得並核對可用商品規格來源及資料使用條款，避免用商品標題補造規格。以實際點擊率驗證效果，不保證轉換提升。
