@@ -49,3 +49,31 @@ assert.throws(()=>validateCatalog({...coverageSnapshot,fetchedAt:new Date(Date.n
 const detergentCoverage=validateCatalog({...snapshot,expanded:[product(81,'空瓶 洗衣精',99),product(82,'洗衣精 空瓶',99),product(83,'洗衣精瓶',99),product(84,'洗衣精收納架',99),product(85,'濃縮洗衣精 補充包',99)],guides:{...snapshot.guides,'detergent-unit-price':[product(86,'空瓶 洗衣精',99)]}});
 assert.deepEqual(guideOffers(detergentCoverage,'detergent-unit-price').map(p=>p.productId),['3','85']);
 assert.deepEqual(detergentCoverage.guides['detergent-unit-price'],[]);
+
+import {productBenefits} from '../src/product-benefits.mjs';
+const benefitFixture=product(91,'65W GaN 三孔充電器',799,true);
+const bankFixture=product(92,'10000mAh 自帶線行動電源',599);
+const storageFixture=product(93,'透明可堆疊收納箱',299);
+const unknownFixture=product(94,'未辨識商品',399);
+const negativeFixture=product(95,'充電器 不支援 PD',99);
+assert(productBenefits(benefitFixture).advantages.some(v=>v.includes('多孔')));
+assert(productBenefits(benefitFixture).advantages.some(v=>v.includes('氮化鎵')));
+assert(productBenefits(bankFixture).advantages.some(v=>v.includes('少帶一條')));
+assert(productBenefits(storageFixture).advantages.some(v=>v.includes('不用每次打開')));
+assert.equal(productBenefits(unknownFixture),null);
+assert.equal(productBenefits(negativeFixture),null);
+assert.equal(productBenefits(product(96,'充電器收納包',99)),null);
+assert.equal(productBenefits(product(97,'充電器 充電線 組合',99)),null);
+assert.equal(productBenefits(product(98,'USB-C 充電器',199)).advantages.length,0);
+const benefitSnapshot={...snapshot,deals:[benefitFixture,bankFixture,unknownFixture],categories:[{categoryId:11,categoryName:'電子配件',available:true,products:[benefitFixture,storageFixture]}],guides:{'usb-c-phone-charger':[benefitFixture]}};
+const benefitPages=render(guides,[],'',benefitSnapshot);
+for(const path of ['index.html','search/index.html','deals/index.html','categories/11/index.html','guides/usb-c-phone-charger/index.html']){
+ const html=benefitPages[path];
+ assert(html.includes('class="product-benefits"'),path);
+ assert(html.includes('減少攜帶多個充電器'),path);
+ assert(html.includes('rel="sponsored nofollow noopener noreferrer"'),path);
+}
+assert(!benefitPages['compare/index.html'].includes('class="product-benefits"'));
+const unknownOnly=render(guides,[],'',benefitSnapshot,new URLSearchParams('q=未辨識商品'))['search/index.html'];
+assert(!unknownOnly.includes('class="product-benefits"'));
+console.log('Product benefits tests passed');
